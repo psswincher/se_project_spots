@@ -3,19 +3,39 @@
 ### Overview  
 
 * Intro  
-* Figma  
-* Images  
+* CSS Grid
+* Media Queries
   
 **Intro**
   
-This project is made so all the elements are displayed correctly on popular screen sizes. We recommend investing more time in completing this project, since it's more difficult than previous ones.  
+This project was an exercise in ensuring all design elements display properly across several popular screen sizes. This was done with two techniques: CSS Grid and Media Queries.
   
-**Figma**  
-  
-* [Link to the project on Figma](https://www.figma.com/file/BBNm2bC3lj8QQMHlnqRsga/Sprint-3-Project-%E2%80%94-Spots?type=design&node-id=2%3A60&mode=design&t=afgNFybdorZO6cQo-1)
-  
-**Images**  
-  
-The way you'll do this at work is by exporting images directly from Figma — we recommend doing that to practice more. Don't forget to optimize them [here](https://tinypng.com/), so your project loads faster. 
-  
-Good luck and have fun!
+**CSS Grid**  
+
+The cards.css file features the primary code that enables the images in the body of the website to vary their layout from screen size to screen size:
+
+```
+.cards__list {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(25.8rem, 1fr));
+    row-gap: 40px;
+    column-gap: 20px;
+}
+```
+
+By setting an auto-fill within on the number of columns in a repeat function, the number of columns scales automatically to to the user's screen size. The minimum column width of 25.8rem is calculated based on the maximum container size and desired column-gap for the grid. 
+
+This auto-fill sizing takes care of both desktop and tablet views, giving the user three and two columns of photos (respectivelly) based on available view width.
+
+**Media Queries**  
+
+There are several crucial media queries to creating the responsive design for mobile devices. These media queries needed accomplish two tasks:
+* rearrange the profile section of the page to vertically stack elements when the screen width no longer leaves space for all elements to be laid out in a row
+* resize the user's avatar when the device no longer has width to show it clearly
+* resize the width of grid columns and their included photos when the screen's width gets too small to support the full sized ones from the tablet/desktop views.
+
+In this exercise, I approached resizing the images as separate from the rearranging of the page's elements. The media queries are designed to rearrange page elements as soon as text becomes overcrowded in order to ensure their legibility. On the other hand, images are resized when the screen becomes too small to support them at their full resolution.
+
+As such, the media query sizes that seemed to best accomplish these goals occur at a min-width of 840px (rearranging elements) and then again at 500px (shrinking images). Media queries make use of min-width as the site was built from the desktop view first, and then smaller screens are accomodated via subsequent adjustments.
