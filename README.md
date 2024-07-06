@@ -7,7 +7,7 @@
 * Media Queries
 
 [Github page link](https://psswincher.github.io/se_project_spots/).
-[Video Link]()
+Video Link: (To be done - I'm currently traveling and won't have privacy to record a video until later. Is it possible to unlock the next project when this one is approved so I can keep learning (and return ASAP to record the video?))
   
 **Intro**
   
