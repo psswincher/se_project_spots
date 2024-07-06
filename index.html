@@ -7,7 +7,6 @@
         <meta name="description" content="A website for Spot.">
         <meta name="keywords" content="social, photo, sharing"> 
         <link rel="shortcut icon" href="favicon.ico" />
-        <link rel="stylesheet" href="./vendor/normalize.css" />
         <link rel="stylesheet" href="./pages/index.css" />
         <title>Spots</title>
     </head>
@@ -26,11 +25,11 @@
                     <p class="profile__description">
                         Known mononymously as Akon (/ˈeɪkɒn/), is a Senegalese-American singer, record producer, and entrepreneur. An influential figure in modern world...
                     </p>
-                        <a class = "profile__button_edit-profile" href="#">
+                        <button class = "profile__edit-button" type="button" href="#">
                             <img class ="profile__pencil-icon" src="images/pencil-icon.svg" alt="Pencil Icon">Edit Profile
-                        </a>
+                        </button>
                 </div>
-                <button class="profile__button_new-post">
+                <button class="profile__add-button">
                     &#43; New Post
                 </button>
             </section>
@@ -94,11 +93,10 @@
                     </ul>        
                 </div>
             </section>
-            <footer class = "footer">   
-                <div class="footer__content">
-                    <p class="footer__copyright">2024 © Spots</p>
-                </div>
-            </footer>
+
         </main>
+        <footer class = "footer">   
+                <p class="footer__copyright">2024 © Spots</p>
+        </footer>
         </div>
     </body>

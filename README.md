@@ -5,6 +5,9 @@
 * Intro  
 * CSS Grid
 * Media Queries
+
+[Github page link](https://psswincher.github.io/se_project_spots/).
+[Video Link]()
   
 **Intro**
   
