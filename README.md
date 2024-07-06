@@ -6,8 +6,9 @@
 * CSS Grid
 * Media Queries
 
-[Github page link](https://psswincher.github.io/se_project_spots/).
-Video Link: (To be done - I'm currently traveling and won't have privacy to record a video until later. Is it possible to unlock the next project when this one is approved so I can keep learning (and return ASAP to record the video?))
+[Github page link](https://psswincher.github.io/se_project_spots/)
+
+[Video Tour Link](https://www.loom.com/share/77a4efdfd3c24c31bab02c4b4cad9101?sid=f5c3c03b-878d-4ebc-b475-1caff9df03a5) 
   
 **Intro**
   
