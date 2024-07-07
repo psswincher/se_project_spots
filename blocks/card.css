@@ -12,6 +12,7 @@
 .card__content {
     margin: 12px 0; 
     padding: 0;
+    height: 1.125rem;
     display: flex;
     justify-content: space-between;
     align-items: center; 
@@ -28,6 +29,13 @@
 .card__title {
     margin: 0;
     font-size: 1.25rem;
+    font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    text-overflow: ellipsis;
+
 }
 
 .card__like-button {
