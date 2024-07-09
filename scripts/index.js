@@ -6,3 +6,16 @@ const initialCards = [
     {name: "Black Fleet", link: "https://vigilantebar.com/wp-content/uploads/2022/08/Black-Fleet.jpg"},
     {name: "Call to Adventure", link: "https://vigilantebar.com/wp-content/uploads/2022/08/Call-to-Adventure-scaled.jpg"}
 ]
+
+document.querySelector('.profile__edit-button').addEventListener('click',OnEditProfileClick);
+document.querySelector('.modal__close-button').addEventListener('click',OnCloseModalClick);
+
+const modal = document.querySelector('#edit-profile-modal');
+
+function OnEditProfileClick() {
+    modal.classList.add('modal__open');
+}
+
+function OnCloseModalClick() {
+    modal.classList.remove('modal__open');
+}
