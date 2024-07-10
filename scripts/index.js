@@ -13,35 +13,42 @@ for (var i = 0; i <initialCards.length; i++) {
     cardsList.append(getCardElement(initialCards[i]));
 }
 
-document.querySelector('.profile__edit-button').addEventListener('click',OnEditProfileClick);
-document.querySelector('.modal__close-button').addEventListener('click',OnCloseModalClick);
-document.querySelector('.modal__submit-button').addEventListener('click',OnProfileModalSubmit);
+document.querySelector('.profile__edit-button').addEventListener('click',onEditProfileClick);
+document.querySelector('.modal__close-button').addEventListener('click',onCloseProfileModalClick);
+document.querySelector('.modal__form').addEventListener('submit',onProfileModalSubmit);
 const currentProfileName = document.querySelector('.profile__name');
 const currentProfileDescription = document.querySelector('.profile__description');
     
 const profileModal = document.querySelector('#edit-profile-modal');
+const profileName = profileModal.querySelector('#name');
+const profileDescription = profileModal.querySelector('#description');
 
-function OnEditProfileClick() {
-    profileModal.querySelector('#name').setAttribute('value',currentProfileName.textContent);
-    profileModal.querySelector('#description').setAttribute('value', currentProfileDescription.textContent);
+function onEditProfileClick() {
+    profileName.setAttribute('value',currentProfileName.textContent)
+    profileDescription.setAttribute('value', currentProfileDescription.textContent);
     profileModal.classList.add('modal__open');
 }
 
-function OnCloseModalClick(evt) {
-    evt.currentTarget.parentElement.parentElement.classList.remove('modal__open');
+function onCloseProfileModalClick() {
+    closeProfileModal();
 }
 
-function OnProfileModalSubmit(evt) {
+function closeProfileModal() {
+    profileModal.classList.remove('.modal__open');
+}
+
+function onProfileModalSubmit(evt) {
     evt.preventDefault();
-    currentProfileName.textContent = profileModal.querySelector('#name').value;
-    currentProfileDescription.textContent = profileModal.querySelector('#description').value;
-    profileModal.classList.remove('modal__open');
+    currentProfileName.textContent = profileName.value;
+    currentProfileDescription.textContent = profileDescription.value;
+    closeProfileModal();
 }
 
 function getCardElement(cardData) {
-    newCard = document.querySelector('#card').content.cloneNode(true); 
-    newCard.querySelector('.card__image').setAttribute('src',cardData.link);
-    newCard.querySelector('.card__image').setAttribute('alt',cardData.name);
+    let newCard = document.querySelector('#card').content.cloneNode(true); 
+    let newCardImage = newCard.querySelector('.card__image'); 
+    newCardImage.setAttribute('src',cardData.link);
+    newCardImage.setAttribute('alt',cardData.name);
     newCard.querySelector('.card__title').textContent = cardData.name;
 
     return newCard;
