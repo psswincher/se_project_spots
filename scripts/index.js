@@ -7,15 +7,42 @@ const initialCards = [
     {name: "Call to Adventure", link: "https://vigilantebar.com/wp-content/uploads/2022/08/Call-to-Adventure-scaled.jpg"}
 ]
 
-document.querySelector('.profile__edit-button').addEventListener('click',OnEditProfileClick);
-document.querySelector('.modal__close-button').addEventListener('click',OnCloseModalClick);
+const cardsList = document.querySelector('.cards__list')
 
-const modal = document.querySelector('#edit-profile-modal');
-
-function OnEditProfileClick() {
-    modal.classList.add('modal__open');
+for (var i = 0; i <initialCards.length; i++) {
+    cardsList.append(getCardElement(initialCards[i]));
 }
 
-function OnCloseModalClick() {
-    modal.classList.remove('modal__open');
+document.querySelector('.profile__edit-button').addEventListener('click',OnEditProfileClick);
+document.querySelector('.modal__close-button').addEventListener('click',OnCloseModalClick);
+document.querySelector('.modal__submit-button').addEventListener('click',OnProfileModalSubmit);
+const currentProfileName = document.querySelector('.profile__name');
+const currentProfileDescription = document.querySelector('.profile__description');
+    
+const profileModal = document.querySelector('#edit-profile-modal');
+
+function OnEditProfileClick() {
+    profileModal.querySelector('#name').setAttribute('value',currentProfileName.textContent);
+    profileModal.querySelector('#description').setAttribute('value', currentProfileDescription.textContent);
+    profileModal.classList.add('modal__open');
+}
+
+function OnCloseModalClick(evt) {
+    evt.currentTarget.parentElement.parentElement.classList.remove('modal__open');
+}
+
+function OnProfileModalSubmit(evt) {
+    evt.preventDefault();
+    currentProfileName.textContent = profileModal.querySelector('#name').value;
+    currentProfileDescription.textContent = profileModal.querySelector('#description').value;
+    profileModal.classList.remove('modal__open');
+}
+
+function getCardElement(cardData) {
+    newCard = document.querySelector('#card').content.cloneNode(true); 
+    newCard.querySelector('.card__image').setAttribute('src',cardData.link);
+    newCard.querySelector('.card__image').setAttribute('alt',cardData.name);
+    newCard.querySelector('.card__title').textContent = cardData.name;
+
+    return newCard;
 }

@@ -19,12 +19,8 @@
             <section class="profile page__section">
                 <img class="profile__avatar" src="./images/Avatar.png" alt="User Avatar">
                 <div class="profile__column">
-                    <h1 class = "profile__name">
-                            Aliaune Damala Bouga Time Bongo Puru Nacka Lu Lu Lu Badara Akon...
-                    </h1>
-                    <p class="profile__description">
-                        Known mononymously as Akon (/ˈeɪkɒn/), is a Senegalese-American singer, record producer, and entrepreneur. An influential figure in modern world...
-                    </p>
+                    <h1 class = "profile__name">Aliaune Damala Bouga Time Bongo Puru Nacka Lu Lu Lu Badara Akon...</h1>
+                    <p class="profile__description">Known mononymously as Akon (/ˈeɪkɒn/), is a Senegalese-American singer, record producer, and entrepreneur. An influential figure in modern world...</p>
                         <button class = "profile__edit-button" type="button">
                             <img class ="profile__pencil-icon" src="images/pencil-icon.svg" alt="Pencil Icon">Edit Profile
                         </button>
@@ -36,7 +32,7 @@
             <section class="cards page__section">
                 <div class="cards__content">
                     <ul class="cards__list">
-                        <li class="card">
+                        <!-- <li class="card">
                             <img class="card__image" src="./images/pexels-kassandre-pedro-8639743-1-6.png" alt="Val Thorens">
                             <div class="card__content">
                                 <h2 class="card__title">Val Thorens</h2>
@@ -89,7 +85,7 @@
                                     <img class="card__like-image" src="./images/heart-icon.svg" alt="Like Photo">
                                 </button>
                             </div>
-                        </li>
+                        </li> -->
                     </ul>        
                 </div>
             </section>
@@ -116,6 +112,17 @@
                 </form>
             </div>
         </div>
+        <template id="card">
+            <li class="card">
+                <img class="card__image" src=`${cardImageSource}` alt=`${cardTitle}`>
+                <div class="card__content">
+                    <h2 class="card__title">`${cardTitle}`</h2>
+                    <button type="button" class="card__like-button">
+                        <img class="card__like-image" src="./images/heart-icon.svg" alt="Like Photo">
+                    </button>
+                </div>
+            </li>
+        </template>
         </div>
         <script src="./scripts/index.js" defer="true"></script>
     </body>
