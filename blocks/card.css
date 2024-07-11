@@ -22,7 +22,6 @@
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    /* z-index: 3; */
 
     display: flex;
     justify-content: center;
@@ -82,20 +81,28 @@
     cursor: pointer;
 }
 
-.card__like-image {
+.card__unliked-image {
     opacity: 40%;
 }
 
-.card__like-image:hover {
+.card__unliked-image:hover {
     opacity: 100%;
 }
 
-.card__like-image_liked {
+.card__unliked-image__inactive {
+    display: none;
+}
+
+.card__liked-image {
     opacity: 100%;
 }
 
-.card__like-image_liked:hover {
+.card__liked-image:hover {
     opacity: 50%;
+}
+
+.card__liked-image__inactive {
+    display: none;
 }
 
 @media screen and (max-width: 500px) {
