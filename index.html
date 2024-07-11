@@ -41,28 +41,59 @@
         </footer>
         <div class="modal" id="edit-profile-modal">
             <div class="modal__container">
-                <button type="button" class="modal__close-button">
+                <button type="button" class="modal__close-button" id="profile-modal__close">
                     <img class="modal__close-icon" src="./images/close-button.svg">
                 </button>
                 <h2 class="modal__title">Edit Profile</h2>
-                <form name="edit-profile" class="modal__form">
-                    <label for="name" class="modal__label">
+                <form name="edit-profile" class="modal__form" id="profile-modal__form">
+                    <label for="profile-name" class="modal__label">
                         Name
-                        <input id="name" type="text" class="modal__input"/>
+                        <input id="profile-name" type="text" class="modal__input"/>
                     </label>
-                    <label for="description" class="modal__label">
+                    <label for="profile-description" class="modal__label">
                         Description
-                        <input id="description" type="text" class="modal__input"/>
+                        <input id="profile-description" type="text" class="modal__input"/>
                     </label>
                     <button type="submit" class="modal__submit-button">Submit</button>
                 </form>
             </div>
         </div>
+        <div class="modal" id="post-modal">
+            <div class="modal__container">
+                <button type="button" class="modal__close-button" id="new-post-modal__close">
+                    <img class="modal__close-icon" src="./images/close-button.svg">
+                </button>
+                <h2 class="modal__title">New Post</h2>
+                <form name="new-post-modal" class="modal__form" id="new-post-modal__form">
+                    <label for="link" class="modal__label">
+                        Image link
+                        <input id="link" type="text" class="modal__input"/>
+                    </label>
+                    <label for="caption" class="modal__label">
+                        Caption
+                        <input id="caption" type="text" class="modal__input"/>
+                    </label>
+                    <button type="submit" class="modal__submit-button">Save</button>
+                </form>
+            </div>
+        </div>
+        <div class="modal" id="preview-modal">
+            <div class="modal__container_preview">
+                <button type="button" class="modal__close-button_preview" id="preview-modal__close">
+                    <img class="modal__close-icon" src="./images/white-close.svg">
+                </button>
+                <img class="modal__preview-image">
+                <h2 class="modal__title_preview" id="preview-title"></h2>
+            </div>
+        </div>
         <template id="card">
             <li class="card">
                 <img class="card__image" src=`${cardImageSource}` alt=`${cardTitle}`>
+                <button type="button" class="card__delete-button">
+                    <img class="card__delete-image" src="./images/trash-can.svg" alt="Delete Photo">
+                </button>
                 <div class="card__content">
-                    <h2 class="card__title">`${cardTitle}`</h2>
+                    <h2 class="card__title"></h2>
                     <button type="button" class="card__like-button">
                         <img class="card__like-image" src="./images/heart-icon.svg" alt="Like Photo">
                     </button>

@@ -10,10 +10,13 @@
     align-items: center;
     justify-content: center;
     visibility: hidden;
+    opacity: 0;
+    transition: visibility, 0.6s ease;
 }
 
 .modal_open {
     visibility: visible;
+    opacity: 1;
 }
 
 .modal__container {
@@ -87,6 +90,67 @@
     gap: 32px;
 }
 
+
+.modal__container_preview {
+    display: grid;
+    grid-template-columns: 1f min-content;
+    grid-template-rows: 1f min-content;
+    grid-template-areas: 
+        "image close-button"
+        "title .";
+    column-gap: 12.57px;
+}
+
+
+.modal__close-button_preview {
+    grid-area: close-button;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    background-color: rgba(1,1,1,0);
+    border: none;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+
+}
+
+.modal__close-button_preview:hover {
+    opacity: 40%;
+}
+
+.modal__title_preview {
+    margin: 8px 0 0 0;
+    padding: 4px 8px;
+    border-radius: 4px;
+    height: 2rem;
+    width: max-content;
+    background-color: rgba(33, 33, 33, 1);
+    color: rgba(255, 255, 255, 1);
+    font-weight: 500;
+    font-size: 1.25rem;
+    justify-self: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: baseline;
+    grid-area: title;
+
+}
+
+.modal__preview-image {
+    margin: 0;
+    padding: 0;
+    grid-area: image;
+    align-self: center;
+    justify-self: center;
+    /* margin: 0 auto; */
+    max-width: 80vw;
+    max-height: 80vh;
+}
+
 @media screen and (max-width: 500px) {
 
     .modal__container {
@@ -117,6 +181,26 @@
     .modal__submit-button {
         width: 100%;
         max-width: 300px;
+    }
+
+    .modal__container_preview {
+        display: grid;
+        grid-template-columns: 1f;
+        grid-template-rows: min-content 1f min-content;
+        grid-template-areas: 
+            "close-button"
+            "image"
+            "title";
+        column-gap: 0;
+    }
+
+    .modal__close-button_preview {
+        justify-self: right;
+    }
+
+    .modal__title_preview {
+        font-size: 1rem;
+        height: 27px;
     }
 
 }
