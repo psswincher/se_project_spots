@@ -9,9 +9,8 @@ const initialCards = [
 
 const cardsList = document.querySelector('.cards__list')
 
-for (var i = 0; i <initialCards.length; i++) {
-    cardsList.append(getCardElement(initialCards[i]));
-}
+let cardsRender = initialCards.map(cardData => getCardElement(cardData));
+cardsList.append(...cardsRender);
 
 document.querySelector('.profile__edit-button').addEventListener('click',onEditProfileClick);
 document.querySelector('.modal__close-button').addEventListener('click',onCloseProfileModalClick);
@@ -23,10 +22,12 @@ const profileModal = document.querySelector('#edit-profile-modal');
 const profileName = profileModal.querySelector('#name');
 const profileDescription = profileModal.querySelector('#description');
 
+// const templateCard = document.querySelector('#card');
+
 function onEditProfileClick() {
     profileName.setAttribute('value',currentProfileName.textContent)
     profileDescription.setAttribute('value', currentProfileDescription.textContent);
-    profileModal.classList.add('modal__open');
+    profileModal.classList.add('modal_open');
 }
 
 function onCloseProfileModalClick() {
@@ -34,7 +35,7 @@ function onCloseProfileModalClick() {
 }
 
 function closeProfileModal() {
-    profileModal.classList.remove('.modal__open');
+    profileModal.classList.remove('modal_open');
 }
 
 function onProfileModalSubmit(evt) {
@@ -46,6 +47,7 @@ function onProfileModalSubmit(evt) {
 
 function getCardElement(cardData) {
     let newCard = document.querySelector('#card').content.cloneNode(true); 
+    // let newCard = templateCard.content.cloneNode(true);
     let newCardImage = newCard.querySelector('.card__image'); 
     newCardImage.setAttribute('src',cardData.link);
     newCardImage.setAttribute('alt',cardData.name);
