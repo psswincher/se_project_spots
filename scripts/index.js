@@ -46,7 +46,7 @@ document.querySelector('#preview-modal__close').addEventListener('click',onClose
 
 //#region modal handlers
 function onCloseModalClick(evt) {
-    let modal = evt.target.closest('.modal');
+    const modal = evt.target.closest('.modal');
     closeModal(modal);
 }
 
@@ -84,7 +84,7 @@ function onNewPostClick() {
 function onPostModalSubmit(evt) {
     evt.preventDefault();
     //TO DO: error handling in event card link is not a link?
-    let newCardRender = getCardElement({name: postCaption.value, link: postLink.value});
+    const newCardRender = getCardElement({name: postCaption.value, link: postLink.value});
     cardsList.prepend(newCardRender);
     postCaption.value = "";
     postLink.value = "";    
@@ -95,10 +95,10 @@ function onPostModalSubmit(evt) {
 
 //#region card functions
 function getCardElement(cardData) {
-    let newCard = document.querySelector('#card').content.cloneNode(true); 
-    let newCardImage = newCard.querySelector('.card__image'); 
-    let newCardLikeButton = newCard.querySelector('.card__like-button');
-    let newCardDeleteButton = newCard.querySelector('.card__delete-button');
+    const newCard = document.querySelector('#card').content.cloneNode(true); 
+    const newCardImage = newCard.querySelector('.card__image'); 
+    const newCardLikeButton = newCard.querySelector('.card__like-button');
+    const newCardDeleteButton = newCard.querySelector('.card__delete-button');
     newCardImage.setAttribute('src',cardData.link);
     newCardImage.setAttribute('alt',cardData.name);
     newCardImage.addEventListener('click',onCardImageClick);
