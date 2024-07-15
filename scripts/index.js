@@ -10,6 +10,9 @@ const initialCards = [
 ]
 
 const cardsList = document.querySelector('.cards__list');
+initialCards.forEach(cardData => {
+    cardsList.append(getCardElement(cardData));
+});
 
 //#endregion
 
@@ -88,7 +91,9 @@ function onEditProfileClick() {
     profileName.setAttribute('value',currentProfileName.textContent)
     profileDescription.setAttribute('value', currentProfileDescription.textContent);
     updateSubmitButtonFromFormValidity(cardForm);
+    
     openModal(profileModal); 
+    checkFormFieldInputErrors(cardForm);
 }
 
 function onProfileModalSubmit(evt) {
@@ -112,10 +117,13 @@ function onNewPostClick(evt) {
 
 function onPostModalSubmit(evt) {
     evt.preventDefault();
-    const newCard = new CardElement(postCaption.value, postLink.value);
-    newCard.prependCard();
+    //const newCard = new CardElement(postCaption.value, postLink.value);
+    //newCard.prependCard();
+    const newCard = getCardElement({name: postCaption.value, link: postLink.value});
+    cardsList.prepend(newCard);
     postCaption.value = "";
     postLink.value = "";
+    
     const postModal = evt.target.closest('.modal');
     resetModalForm(postModal);
     closeModal(postModal);
@@ -123,148 +131,141 @@ function onPostModalSubmit(evt) {
 
 //#endregion
 
-//#region card functions
-class CardElement {
-    //hello code reviewer! I don't know if this would be the best way to do this, 
-    //but it felt like a very tidy/smooth way to implement.
-    //If this isn't best practice please let me know and I'll revert changes and do it closer to the inital project layout?
-    //Thank you!! 
-    constructor(title, imageLink) {
-
-        this.cardTemplate = document.querySelector('#card').content.cloneNode(true);
-        this.card = this.cardTemplate;
-        
-        this.cardImage = this.cardTemplate.querySelector('.card__image'); 
-        this.likeButton = this.cardTemplate.querySelector('.card__like-button');
-        this.deleteButton = this.cardTemplate.querySelector('.card__delete-button');
-        this.titleElement = this.cardTemplate.querySelector('.card__title');
-        
-        this.liked = false;
-        this.cardUnlikedImage = this.cardTemplate.querySelector('.card__unliked-image');
-        this.cardLikedImage = this.cardTemplate.querySelector('.card__liked-image');
-        
-        this.setTitle(title);
-        this.setCardImage(imageLink);
-
-        this.cardImage.addEventListener('click',this.onImageClick.bind(this));
-        this.likeButton.addEventListener('click',this.onLikeClick.bind(this));
-        this.deleteButton.addEventListener('click',this.onDeleteClick.bind(this));
-
-    }
-
-    setTitle(title) {
-        if(typeof title === 'string') {
-            this.titleText = title;
-            this.titleElement.textContent = this.titleText;
-        } else {
-            console.log(`New card title is not a string. Unable to set.`);
-        }
-    }
-
-    setCardImage(imageLink, imageTitle = undefined) {
-        !imageTitle ? this.setTitle(imageTitle) : null;
-        this.cardImage.setAttribute('src', imageLink);
-        this.cardImage.setAttribute('alt', this.titleText);
-    }
-
-    onLikeClick() {
-        this.isLikeActive() ? this.deactivateLikeButton() : this.activateLikeButton();
-    }
-
-    isLikeActive() {
-        return !this.cardLikedImage.classList.contains('card__liked-image__inactive');
-    }
-
-    activateLikeButton() {
-        this.cardLikedImage.classList.remove('card__liked-image__inactive');
-        this.cardUnlikedImage.classList.add('card__unliked-image__inactive');
-    }
-
-    deactivateLikeButton() {
-        this.cardLikedImage.classList.add('card__liked-image__inactive');
-        this.cardUnlikedImage.classList.remove('card__unliked-image__inactive');
-    }
-
-    onDeleteClick() {
-        this.card.remove();
-    }
-
-    onImageClick() {
-        previewImage.setAttribute('src',this.cardImage.src);
-        previewImage.setAttribute('alt',this.titleText);
-        previewTitle.textContent = this.titleText;
-        openModal(previewModal);
-    }
-
-    appendCard() {
-        cardsList.append(this.card);
-        //note to self: bc the document fragment is emptied once it is added to the dom, this.card must be set to reference the newly added card element in the revised dom
-        this.card = cardsList.children[cardsList.children.length - 1];
-    }
-
-    prependCard() {
-        cardsList.prepend(this.card);
-        this.card = cardsList.children[0];
-    }
+//PRIOR implementation of card elements, reserved in case making a class was a bad idea.
+function onLikeClick(evt) {
+    evt.target.closest('.card')
 }
 
-initialCards.forEach(cardData => {
-    const newCard = new CardElement(cardData.name, cardData.link)
-    newCard.appendCard();
-});
+function getCardElement(cardData) {
+    const newCard = document.querySelector('#card').content.cloneNode(true); 
+    const newCardImage = newCard.querySelector('.card__image'); 
+    const newCardLikeButton = newCard.querySelector('.card__like-button');
+    const newCardDeleteButton = newCard.querySelector('.card__delete-button');
+    newCardImage.setAttribute('src',cardData.link);
+    newCardImage.setAttribute('alt',cardData.name);
+    newCardImage.addEventListener('click',onCardImageClick);
+    newCard.querySelector('.card__title').textContent = cardData.name;
+    newCardLikeButton.addEventListener('click',onLikeCardClick);
+    newCardDeleteButton.addEventListener('click',onDeleteCardClick);
+    return newCard;
+}
 
-initialCards.forEach(cardData => {
-    const newCard = new CardElement(cardData.name, cardData.link)
-    newCard.appendCard();
-});
+//handles card image preview
+function onCardImageClick(evt) {
+    const targetCard = evt.target.closest('.card');
+    const cardTitle = targetCard.querySelector('.card__title').textContent
+    previewImage.setAttribute('src',targetCard.querySelector('.card__image').src);
+    previewImage.setAttribute('alt',cardTitle);
+    previewTitle.textContent = cardTitle;
+    openModal(previewModal);
+}
 
-//PRIOR implementation of card elements, reserved in case making a class was a bad idea.
-// function onLikeClick(evt) {
-//     evt.target.closest('.card')
-// }
+function onLikeCardClick(evt) {
+    //toggles like icon on and off
+    const parentCard = evt.target.closest('.card');
 
-// function getCardElement(cardData) {
-//     const newCard = document.querySelector('#card').content.cloneNode(true); 
-//     const newCardImage = newCard.querySelector('.card__image'); 
-//     const newCardLikeButton = newCard.querySelector('.card__like-button');
-//     const newCardDeleteButton = newCard.querySelector('.card__delete-button');
-//     newCardImage.setAttribute('src',cardData.link);
-//     newCardImage.setAttribute('alt',cardData.name);
-//     newCardImage.addEventListener('click',onCardImageClick);
-//     newCard.querySelector('.card__title').textContent = cardData.name;
-//     newCardLikeButton.addEventListener('click',onLikeCardClick);
-//     newCardDeleteButton.addEventListener('click',onDeleteCardClick);
-//     return newCard;
-// }
+    const cardUnlikedImage = parentCard.querySelector('.card__unliked-image');
+    const cardLikedImage = parentCard.querySelector('.card__liked-image');
 
-// //handles card image preview
-// function onCardImageClick(evt) {
-//     const targetCard = evt.target.closest('.card');
-//     const cardTitle = targetCard.querySelector('.card__title').textContent
-//     previewImage.setAttribute('src',targetCard.querySelector('.card__image').src);
-//     previewImage.setAttribute('alt',cardTitle);
-//     previewTitle.textContent = cardTitle;
-//     openModal(previewModal);
-// }
-
-// function onLikeCardClick(evt) {
-//     //toggles like icon on and off
-//     const parentCard = evt.target.closest('.card');
-
-//     const cardUnlikedImage = parentCard.querySelector('.card__unliked-image');
-//     const cardLikedImage = parentCard.querySelector('.card__liked-image');
-
-//     cardUnlikedImage.classList.contains('card__unliked-image__inactive') ? 
-//         cardUnlikedImage.classList.remove('card__unliked-image__inactive') : 
-//         cardUnlikedImage.classList.add('card__unliked-image__inactive');
+    cardUnlikedImage.classList.contains('card__unliked-image__inactive') ? 
+        cardUnlikedImage.classList.remove('card__unliked-image__inactive') : 
+        cardUnlikedImage.classList.add('card__unliked-image__inactive');
     
-//     cardLikedImage.classList.contains('card__liked-image__inactive') ? 
-//         cardLikedImage.classList.remove('card__liked-image__inactive') : 
-//         cardLikedImage.classList.add('card__liked-image__inactive');
+    cardLikedImage.classList.contains('card__liked-image__inactive') ? 
+        cardLikedImage.classList.remove('card__liked-image__inactive') : 
+        cardLikedImage.classList.add('card__liked-image__inactive');
+}
+
+function onDeleteCardClick(evt) {
+    evt.target.closest('.card').remove();
+}
+//#region card functions
+// class CardElement {
+//     //hello code reviewer! I don't know if this would be the best way to do this, 
+//     //but it felt like a very tidy/smooth way to implement.
+//     //If this isn't best practice please let me know and I'll revert changes and do it closer to the inital project layout?
+//     //Thank you!! 
+//     constructor(title, imageLink) {
+
+//         this.cardTemplate = document.querySelector('#card').content.cloneNode(true);
+//         this.card = this.cardTemplate;
+        
+//         this.cardImage = this.cardTemplate.querySelector('.card__image'); 
+//         this.likeButton = this.cardTemplate.querySelector('.card__like-button');
+//         this.deleteButton = this.cardTemplate.querySelector('.card__delete-button');
+//         this.titleElement = this.cardTemplate.querySelector('.card__title');
+        
+//         this.liked = false;
+//         this.cardUnlikedImage = this.cardTemplate.querySelector('.card__unliked-image');
+//         this.cardLikedImage = this.cardTemplate.querySelector('.card__liked-image');
+        
+//         this.setTitle(title);
+//         this.setCardImage(imageLink);
+
+//         this.cardImage.addEventListener('click',this.onImageClick.bind(this));
+//         this.likeButton.addEventListener('click',this.onLikeClick.bind(this));
+//         this.deleteButton.addEventListener('click',this.onDeleteClick.bind(this));
+
+//     }
+
+//     setTitle(title) {
+//         if(typeof title === 'string') {
+//             this.titleText = title;
+//             this.titleElement.textContent = this.titleText;
+//         } else {
+//             console.log(`New card title is not a string. Unable to set.`);
+//         }
+//     }
+
+//     setCardImage(imageLink, imageTitle = undefined) {
+//         !imageTitle ? this.setTitle(imageTitle) : null;
+//         this.cardImage.setAttribute('src', imageLink);
+//         this.cardImage.setAttribute('alt', this.titleText);
+//     }
+
+//     onLikeClick() {
+//         this.isLikeActive() ? this.deactivateLikeButton() : this.activateLikeButton();
+//     }
+
+//     isLikeActive() {
+//         return !this.cardLikedImage.classList.contains('card__liked-image__inactive');
+//     }
+
+//     activateLikeButton() {
+//         this.cardLikedImage.classList.remove('card__liked-image__inactive');
+//         this.cardUnlikedImage.classList.add('card__unliked-image__inactive');
+//     }
+
+//     deactivateLikeButton() {
+//         this.cardLikedImage.classList.add('card__liked-image__inactive');
+//         this.cardUnlikedImage.classList.remove('card__unliked-image__inactive');
+//     }
+
+//     onDeleteClick() {
+//         this.card.remove();
+//     }
+
+//     onImageClick() {
+//         previewImage.setAttribute('src',this.cardImage.src);
+//         previewImage.setAttribute('alt',this.titleText);
+//         previewTitle.textContent = this.titleText;
+//         openModal(previewModal);
+//     }
+
+//     appendCard() {
+//         cardsList.append(this.card);
+//         //note to self: bc the document fragment is emptied once it is added to the dom, this.card must be set to reference the newly added card element in the revised dom
+//         this.card = cardsList.children[cardsList.children.length - 1];
+//     }
+
+//     prependCard() {
+//         cardsList.prepend(this.card);
+//         this.card = cardsList.children[0];
+//     }
 // }
 
-// function onDeleteCardClick(evt) {
-//     evt.target.closest('.card').remove();
-// }
+// initialCards.forEach(cardData => {
+//     const newCard = new CardElement(cardData.name, cardData.link)
+//     newCard.appendCard();
+// });
 
-//#endregion

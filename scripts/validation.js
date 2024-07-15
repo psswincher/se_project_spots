@@ -17,7 +17,7 @@ function enableValidation(settings) {
   setAllFieldValidationListeners(inputFields);
 };
 
-enableValidation();
+enableValidation(settings);
 
 function onFieldInput(event) {
   validationDebug(event, arguments.callee.name);
@@ -61,7 +61,10 @@ function updateSubmitButtonFromFormValidity(form) {
 function checkFormInputFieldValidity(form) {
   const inputFieldArray = getFormInputFieldsArray(form);
   // validationDebug(checkInputFieldValidity(inputFieldArray) && checkInputFieldsFilled(inputFieldArray), arguments.callee.name);
-  return checkInputFieldValidity(inputFieldArray) && checkInputFieldsFilled(inputFieldArray);
+  if(!checkInputFieldsFilled) {
+    return false;
+  }
+  return checkInputFieldValidity(inputFieldArray);
 }
 
 function checkInputFieldValidity(inputFieldArray) {
