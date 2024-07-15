@@ -7,11 +7,11 @@ const settings = {
   inactiveButtonClass: "modal__button_disabled",
   inputErrorClass: ".modal__input_type_error",
   errorClass: "modal__error_visible",
-  debugging: false,
+  debugging: true,
 }
 
 //code review - is there a reason why we put these in a function, instead of exposing them as variables to use across other functions?
-function enableValidation() {
+function enableValidation(settings) {
   const formsArray = Array.from(document.querySelectorAll(settings.formSelector));
   const inputFields = getInputFieldsFromForms(formsArray);
   setAllFieldValidationListeners(inputFields);
@@ -24,13 +24,12 @@ function onFieldInput(event) {
   const inputValidity = checkInputValidity(event);
   const inputField = event.target;
   const submitButton = getSubmitButtonFromInputField(inputField);
-  
-  fieldInputErrorHandler(inputField, inputValidity); 
-  submitButtonStateHandler(submitButton, inputValidity);
+  const inputForm = inputField.closest('form');
+  checkFieldInputErrors(inputField, inputValidity); 
+  submitButtonStateHandler(submitButton, checkFormInputFieldValidity(inputForm));
 }
 
 function resetModalForm(modal) {
-  console.log(modal);
   const inputFields = getFormInputFieldsArray(modal.querySelector(settings.formSelector));
   inputFields.forEach(inputField => resetInputField(inputField));
   disableSubmitButton(modal.querySelector(settings.submitButtonSelector));
@@ -41,7 +40,11 @@ function resetInputField(inputField) {
   deactivateValidationError(inputField);
 }
 
-function fieldInputErrorHandler(inputField, inputValidity) {
+function checkFormFieldInputErrors(form) {
+  getFormInputFieldsArray(form).forEach(field => checkFieldInputErrors(field));
+}
+
+function checkFieldInputErrors(inputField, inputValidity) {
   inputValidity ? deactivateValidationError(inputField) : activateValidationError(inputField);
 }
 
@@ -49,19 +52,29 @@ function submitButtonStateHandler(submitButton, stateBool) {
   stateBool ? enableSubmitButton(submitButton) : disableSubmitButton(submitButton); 
 }
 
-function formValiditySubmitButtonHandler(form) {
-  validationDebug(form, arguments.callee.name);
-  submitButtonStateHandler(getSubmitButtonFromForm(form), formFieldValidity(form));
+function updateSubmitButtonFromFormValidity(form) {
+  // validationDebug(form, arguments.callee.name);
+  console.log(checkFormInputFieldValidity(form));
+  submitButtonStateHandler(getSubmitButtonFromForm(form), checkFormInputFieldValidity(form));
 }
 
-function formFieldValidity(form) {
-  return areInputFieldsValid(getFormInputFieldsArray(form));
+function checkFormInputFieldValidity(form) {
+  const inputFieldArray = getFormInputFieldsArray(form);
+  // validationDebug(checkInputFieldValidity(inputFieldArray) && checkInputFieldsFilled(inputFieldArray), arguments.callee.name);
+  return checkInputFieldValidity(inputFieldArray) && checkInputFieldsFilled(inputFieldArray);
 }
 
-function areInputFieldsValid(inputFieldArray) {
-  return inputFieldArray.some((inputField) => {
-    return !inputField.validity.valid;
-  })
+function checkInputFieldValidity(inputFieldArray) {
+  return inputFieldArray.every((inputField) => {
+    return inputField.validity.valid;
+  });
+}
+
+function checkInputFieldsFilled(inputFieldArray) {
+  return inputFieldArray.every((inputField) => {
+    console.log(inputField.value);
+    return !!inputField.value;
+  });
 }
 
 function getSubmitButtonFromForm(form) {
@@ -81,7 +94,6 @@ function enableSubmitButton(submitButton) {
 
 function disableSubmitButton(submitButton) {
   submitButton.classList.add(settings.inactiveButtonClass);
-  console.log("BUTTON SET TO DISABLED");
   submitButton.disabled = true;
 }
 
@@ -143,6 +155,7 @@ function setAllFieldValidationListeners(inputFields) {
 
 function setFieldValidationListeners(inputField) {
     inputField.addEventListener('input',onFieldInput);
+    inputField.addEventListener('paste',onFieldInput);
 }
 
 function getInputFieldsFromForms(formsArray) {

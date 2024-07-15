@@ -17,7 +17,7 @@ const cardsList = document.querySelector('.cards__list');
 const profileModal = document.querySelector('#edit-profile-modal');
 const profileName = profileModal.querySelector('#profile-name');
 const profileDescription = profileModal.querySelector('#profile-description');
-profileModal.addEventListener('click',modalOverlayClick);
+profileModal.addEventListener('click',checkForModalOverlayClick);
 document.querySelector('.profile__edit-button').addEventListener('click',onEditProfileClick);
 document.querySelector('#profile-modal__close').addEventListener('click',onCloseModalClick);
 document.forms['profile-modal__form'].addEventListener('submit',onProfileModalSubmit);
@@ -32,32 +32,34 @@ const defaultCaptionField = 'Type your caption'
 const postModal = document.querySelector('#post-modal');
 const postLink = postModal.querySelector('#link');
 const postCaption = postModal.querySelector('#caption');
-postModal.addEventListener('click',modalOverlayClick);
+postModal.addEventListener('click',checkForModalOverlayClick);
 document.querySelector('.profile__add-button').addEventListener('click',onNewPostClick);
 document.querySelector('#new-post-modal__close').addEventListener('click',onCloseModalClick);
-document.forms['new-post-modal__form'].addEventListener('submit',onPostModalSubmit);
+const cardForm = document.forms['new-post-modal__form']
+cardForm.addEventListener('submit',onPostModalSubmit);
 //#endregion
 
 //#region preview modal declarations
 const previewModal = document.querySelector('#preview-modal');
 const previewImage = document.querySelector('.modal__preview-image');
 const previewTitle = document.querySelector('#preview-title');
+previewModal.addEventListener('click',checkForModalOverlayClick);
 document.querySelector('#preview-modal__close').addEventListener('click',onCloseModalClick);
 //#endregion
 
 //#region modal handlers
-function modalOverlayClick(evt) {
+function checkForModalOverlayClick(evt) {
     if(evt.target.classList.contains("modal")) onCloseModalClick(evt);
 }
 
 function onCloseModalClick(evt) {
-    console.log(evt.target);
     const modal = evt.target.closest('.modal');
     closeModal(modal);
 }
 
 function openModal(modal) {
     addEscapeListener();
+    // checkFormFieldInputErrors(modal.querySelector('.modal__form')); //this can check every field on open, but feels bearish
     modal.classList.add('modal_open');
 }
 
@@ -85,7 +87,7 @@ function onKeyPress(evt) {
 function onEditProfileClick() {
     profileName.setAttribute('value',currentProfileName.textContent)
     profileDescription.setAttribute('value', currentProfileDescription.textContent);
-    formValiditySubmitButtonHandler(document.forms['new-post-modal__form']);
+    updateSubmitButtonFromFormValidity(cardForm);
     openModal(profileModal); 
 }
 
@@ -104,13 +106,13 @@ function onProfileModalSubmit(evt) {
 function onNewPostClick(evt) {
     postLink.setAttribute('placeholder',defaultLinkField);
     postCaption.setAttribute('placeholder',defaultCaptionField);
-    formValiditySubmitButtonHandler(document.forms['profile-modal__form']);
+    updateSubmitButtonFromFormValidity(document.forms['profile-modal__form']);
     openModal(postModal);
 }
 
 function onPostModalSubmit(evt) {
     evt.preventDefault();
-    const newCard = new cardElement(postCaption.value, postLink.value);
+    const newCard = new CardElement(postCaption.value, postLink.value);
     newCard.prependCard();
     postCaption.value = "";
     postLink.value = "";
@@ -122,7 +124,7 @@ function onPostModalSubmit(evt) {
 //#endregion
 
 //#region card functions
-class cardElement {
+class CardElement {
     //hello code reviewer! I don't know if this would be the best way to do this, 
     //but it felt like a very tidy/smooth way to implement.
     //If this isn't best practice please let me know and I'll revert changes and do it closer to the inital project layout?
@@ -207,7 +209,12 @@ class cardElement {
 }
 
 initialCards.forEach(cardData => {
-    const newCard = new cardElement(cardData.name, cardData.link)
+    const newCard = new CardElement(cardData.name, cardData.link)
+    newCard.appendCard();
+});
+
+initialCards.forEach(cardData => {
+    const newCard = new CardElement(cardData.name, cardData.link)
     newCard.appendCard();
 });
 
