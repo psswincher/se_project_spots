@@ -23,9 +23,9 @@
     box-sizing: border-box;
     background-color: rgba(255, 255, 255, 1);
     width: 50%;
+    height: min-content;
     min-width: 500px;
     max-width: 730px;
-    max-height: 408px;
     border-radius: 8px;
     padding: 32px 50px; 
     position: relative;
@@ -50,6 +50,15 @@
 
 .modal__submit-button:hover {
     background-color: rgba(33, 33, 33, 0.8)
+}
+
+.modal__button_disabled {
+    background-color: rgba(33, 33, 33, .5);
+    cursor: default;
+}
+
+.modal__button_disabled:hover {
+    background-color: rgba(33, 33, 33, .5);
 }
 
 .modal__close-button {
@@ -79,15 +88,36 @@
     height: 3.25rem;
     font-size: 1.25rem;
     line-height: 1.25rem;
+    border-radius: 8px;
     font-weight: 500;
     margin-top: 8px;
     cursor: pointer;
+}
+
+.modal__input_error {
+    border-color: rgba(255, 0, 0, 0.6);
+    margin-bottom: 8px;
+}
+
+.modal__input_error:focus {
+    border-color: rgba(255, 0, 0, 0.8)
 }
 
 .modal__form {
     display: flex;
     flex-direction: column;
     gap: 32px;
+}
+
+.modal__input_type_error {
+    display: none;
+    color: #FF0000;
+    font-weight: 500;
+    height: 18px;
+}
+
+.modal__error_visible {
+    display: contents;
 }
 
 .modal__container_preview {
