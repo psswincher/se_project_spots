@@ -1,3 +1,7 @@
+import enableValidation from "../scripts/validation.js";
+import { validationSettings } from "../utils/constants.js";
+import "./index.css";
+enableValidation(validationSettings);
 
 //#region initialize cards and render
 const initialCards = [

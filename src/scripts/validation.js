@@ -1,23 +1,10 @@
-const settings = {
-  formSelector: ".modal__form",
-  inputSelector: ".modal__input",
-  inputErrorStyle: "modal__input_error",
-  submitButtonSelector: ".modal__submit-button",
-  submitButtonName: "modal__submit-button",
-  inactiveButtonClass: "modal__button_disabled",
-  inputErrorClass: ".modal__input_type_error",
-  errorClass: "modal__error_visible",
-  debugging: true,
-}
+import { validationSettings as settings } from "../utils/constants.js";
 
-//code review - is there a reason why we put these in a function, instead of exposing them as variables to use across other functions?
-function enableValidation(settings) {
+export default function enableValidation(settings) {
   const formsArray = Array.from(document.querySelectorAll(settings.formSelector));
   const inputFields = getInputFieldsFromForms(formsArray);
   setAllFieldValidationListeners(inputFields);
 };
-
-enableValidation(settings);
 
 function onFieldInput(event) {
   validationDebug(event, arguments.callee.name);

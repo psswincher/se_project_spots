@@ -13,16 +13,16 @@
     <body class = "body">
         <div class="page">
             <header class="header">
-                <img src="./images/Logo.svg" alt="Spot Logo" class="header__logo">
+                <img src="<%=require('./src/images/Logo.svg')%>" alt="Spot Logo" class="header__logo">
             </header>
             <main class="content">
             <section class="profile page__section">
-                <img class="profile__avatar" src="./images/Avatar.png" alt="User Avatar">
+                <img class="profile__avatar" src="<%=require('./src/images/Avatar.png')%>" alt="User Avatar">
                 <div class="profile__column">
                     <h1 class = "profile__name">Aliaune Damala Bouga Time Bongo Puru Nacka Lu Lu Lu Badara Akon...</h1>
                     <p class="profile__description">Known mononymously as Akon (/ˈeɪkɒn/), is a Senegalese-American singer, record producer, and entrepreneur. An influential figure in modern world...</p>
                         <button class = "profile__edit-button" type="button">
-                            <img class ="profile__pencil-icon" src="images/pencil-icon.svg" alt="Pencil Icon">Edit Profile
+                            <img class ="profile__pencil-icon" src="<%=require('./src/images/pencil-icon.svg')%>" alt="Pencil Icon">Edit Profile
                         </button>
                 </div>
                 <button class="profile__add-button" type="button">
@@ -42,7 +42,7 @@
         <div class="modal" id="edit-profile-modal">
             <div class="modal__container">
                 <button type="button" class="modal__close-button" id="profile-modal__close">
-                    <img class="modal__close-icon" src="./images/close-button.svg">
+                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>"
                 </button>
                 <h2 class="modal__title">Edit Profile</h2>
                 <form name="edit-profile" class="modal__form" id="profile-modal__form" novalidate>
@@ -63,7 +63,7 @@
         <div class="modal" id="post-modal">
             <div class="modal__container">
                 <button type="button" class="modal__close-button" id="new-post-modal__close">
-                    <img class="modal__close-icon" src="./images/close-button.svg">
+                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>"
                 </button>
                 <h2 class="modal__title">New Post</h2>
                 <form name="new-post-modal" class="modal__form" id="new-post-modal__form" novalidate>
@@ -84,7 +84,7 @@
         <div class="modal" id="preview-modal">
             <div class="modal__container_preview">
                 <button type="button" class="modal__close-button" id="preview-modal__close">
-                    <img class="modal__close-icon" src="./images/white-close.svg">
+                    <img class="modal__close-icon" src="<%=require('./src/images/white-close.svg')%>"
                 </button>
                 <img class="modal__preview-image">
                 <h2 class="modal__title_preview" id="preview-title"></h2>
@@ -94,18 +94,17 @@
             <li class="card">
                 <img class="card__image" src=`${cardImageSource}` alt=`${cardTitle}`>
                 <button type="button" class="card__delete-button">
-                    <img class="card__delete-image" src="./images/trash-can.svg" alt="Delete Photo">
+                    <img class="card__delete-image" src="<%=require('./src/images/trash-can.svg')%>" alt="Delete Photo">
                 </button>
                 <div class="card__content">
                     <h2 class="card__title"></h2>
                     <button type="button" class="card__like-button">
-                        <img class="card__unliked-image" src="./images/heart-icon.svg" alt="Like Photo">
-                        <img class="card__liked-image card__liked-image__inactive" src="./images/liked.svg" alt="Like Photo">
+                        <img class="card__unliked-image" src="<%=require('./src/images/heart-icon.svg')%>" alt="Like Photo">
+                        <img class="card__liked-image card__liked-image__inactive" src="<%=require('./src/images/liked.svg')%>" alt="Like Photo">
                     </button>
                 </div>
             </li>
         </template>
         </div>
-        <script src="./scripts/validation.js" defer="true"></script>
-        <script src="./scripts/index.js" defer="true"></script>
+        <script type="module" src="./index.js"></script>
     </body>
