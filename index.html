@@ -6,8 +6,6 @@
         <meta name="author" content="Preston Swincher">
         <meta name="description" content="A website for Spot.">
         <meta name="keywords" content="social, photo, sharing"> 
-        <link rel="shortcut icon" href="favicon.ico" />
-        <link rel="stylesheet" href="./pages/index.css" />
         <title>Spots</title>
     </head>
     <body class = "body">
@@ -42,40 +40,41 @@
         <div class="modal" id="edit-profile-modal">
             <div class="modal__container">
                 <button type="button" class="modal__close-button" id="profile-modal__close">
-                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>"
+                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>">
                 </button>
                 <h2 class="modal__title">Edit Profile</h2>
                 <form name="edit-profile" class="modal__form" id="profile-modal__form" novalidate>
                     <label for="profile-name" class="modal__label">
                         Name
-                        <input id="profile-name" type="text" class="modal__input" minlength="2" maxlength="40" required/>
-                        <span class="modal__input_type_error profile-name-input-error"></span>
+                        <input name="profile-name" id="profile-name" type="text" class="modal__input" minlength="2" maxlength="40" required/>
+                        <span class="modal__input_type_error profile-name-input-error" id="profile-name-input-error"></span>
                     </label>
                     <label for="profile-description" class="modal__label">
                         Description
-                        <input id="profile-description" type="text" class="modal__input" minlength="2" maxlength="200" required/>
-                        <span class="modal__input_type_error profile-description-input-error"></span>
+                        <input name="profile-description" id="profile-description" type="text" class="modal__input" minlength="2" maxlength="200" required/>
+                        <span class="modal__input_type_error profile-description-input-error" id="profile-description-input-error"></span>
                     </label>
-                    <button id="profile-modal__form-submit-button" name="modal__submit-button" type="submit" class="modal__submit-button modal__button_disabled profile-modal__form-submit-button" disabled>Submit</button>
+                    <button id="profile-modal__form-submit-button" name="modal__submit-button" type="submit" class="modal__submit-button profile-modal__form-submit-button">Submit</button>
+                    <!-- <button id="profile-modal__form-submit-button" name="modal__submit-button" type="submit" class="modal__submit-button modal__button_disabled profile-modal__form-submit-button" disabled>Submit</button> -->
                 </form>
             </div>
         </div>
         <div class="modal" id="post-modal">
             <div class="modal__container">
                 <button type="button" class="modal__close-button" id="new-post-modal__close">
-                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>"
+                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>">
                 </button>
                 <h2 class="modal__title">New Post</h2>
                 <form name="new-post-modal" class="modal__form" id="new-post-modal__form" novalidate>
                     <label for="link" class="modal__label">
                         Image link
-                        <input id="link" class="modal__input" required type="url" required/>
-                        <span class="modal__input_type_error link-input-error"></span>
+                        <input name="post-image-link" id="link" class="modal__input" required type="url" required/>
+                        <span class="modal__input_type_error link-input-error"  id="link-input-error"></span>
                     </label>
                     <label for="caption" class="modal__label">
                         Caption
-                        <input id="caption" type="text" class="modal__input" required minlength="2" maxlength="30" required/>
-                        <span class="modal__input_type_error caption-input-error"></span>
+                        <input name="post-caption" id="caption" type="text" class="modal__input" required minlength="2" maxlength="30" required/>
+                        <span class="modal__input_type_error caption-input-error" id="caption-input-error"></span>
                     </label>
                     <button id="new-post-modal__form-submit-button" name="modal__submit-button" type="submit" class="modal__submit-button modal__button_disabled new-post-modal__form-submit-button" disabled>Save</button>
                 </form>
@@ -84,7 +83,7 @@
         <div class="modal" id="preview-modal">
             <div class="modal__container_preview">
                 <button type="button" class="modal__close-button" id="preview-modal__close">
-                    <img class="modal__close-icon" src="<%=require('./src/images/white-close.svg')%>"
+                    <img class="modal__close-icon" src="<%=require('./src/images/white-close.svg')%>">
                 </button>
                 <img class="modal__preview-image">
                 <h2 class="modal__title_preview" id="preview-title"></h2>
@@ -106,5 +105,4 @@
             </li>
         </template>
         </div>
-        <script type="module" src="./index.js"></script>
     </body>

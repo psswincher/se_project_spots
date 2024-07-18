@@ -1,174 +1,275 @@
-import { validationSettings as settings } from "../utils/constants.js";
 
-export default function enableValidation(settings) {
-  const formsArray = Array.from(document.querySelectorAll(settings.formSelector));
-  const inputFields = getInputFieldsFromForms(formsArray);
-  setAllFieldValidationListeners(inputFields);
-};
+export default class FormValidator {
+  constructor(settings, formElement) {
+      this._settings = settings;
+      this._formElement = formElement;
+      this._setFormInputElements();
+      this._setFormButtons();
 
-function onFieldInput(event) {
-  validationDebug(event, arguments.callee.name);
-  const inputValidity = checkInputValidity(event);
-  const inputField = event.target;
-  const submitButton = getSubmitButtonFromInputField(inputField);
-  const inputForm = inputField.closest('form');
-  checkFieldInputErrors(inputField, inputValidity); 
-  submitButtonStateHandler(submitButton, checkFormInputFieldValidity(inputForm));
-}
-
-function resetModalForm(modal) {
-  const inputFields = getFormInputFieldsArray(modal.querySelector(settings.formSelector));
-  inputFields.forEach(inputField => resetInputField(inputField));
-  disableSubmitButton(modal.querySelector(settings.submitButtonSelector));
-}
-
-function resetInputField(inputField) {
-  inputField.textContent = "";
-  deactivateValidationError(inputField);
-}
-
-function checkFormFieldInputErrors(form) {
-  getFormInputFieldsArray(form).forEach(field => checkFieldInputErrors(field));
-}
-
-function checkFieldInputErrors(inputField, inputValidity) {
-  inputValidity ? deactivateValidationError(inputField) : activateValidationError(inputField);
-}
-
-function submitButtonStateHandler(submitButton, stateBool) {
-  stateBool ? enableSubmitButton(submitButton) : disableSubmitButton(submitButton); 
-}
-
-function updateSubmitButtonFromFormValidity(form) {
-  // validationDebug(form, arguments.callee.name);
-  console.log(checkFormInputFieldValidity(form));
-  submitButtonStateHandler(getSubmitButtonFromForm(form), checkFormInputFieldValidity(form));
-}
-
-function checkFormInputFieldValidity(form) {
-  const inputFieldArray = getFormInputFieldsArray(form);
-  // validationDebug(checkInputFieldValidity(inputFieldArray) && checkInputFieldsFilled(inputFieldArray), arguments.callee.name);
-  if(!checkInputFieldsFilled) {
-    return false;
   }
-  return checkInputFieldValidity(inputFieldArray);
+
+  enableValidation() {
+      this._formElement.addEventListener("submit", (evt) => {
+        evt.preventDefault();
+      });
+      this._setEventListeners();
+  }
+
+  resetValidation() {
+      this._disableButton();
+      this._clearFormInputElements();
+  }
+
+  _showInputError = (inputElement) => {
+      const errorElement = this._getErrorElement(inputElement);
+      inputElement.classList.add(this._settings.inputErrorClass);
+      errorElement.textContent = inputElement.validationMessage;
+      errorElement.classList.add(this._settings.errorClass);
+    };
+
+  _hideInputError = (inputElement) => {
+      const errorElement = this._getErrorElement(inputElement);
+      inputElement.classList.remove(this._settings.inputErrorClass);
+      errorElement.classList.remove(this._settings.errorClass);
+      errorElement.textContent = "";
+    };
+
+    _checkFieldValidity = (inputElement) =>  {
+      if (!inputElement.validity.valid) {
+        this._showInputError(
+          inputElement,
+          inputElement.validationMessage,
+        );
+      } else {
+        this._hideInputError(inputElement);
+      }
+    };
+
+  _getErrorElement(inputElement) {
+    return document.querySelector(`#${inputElement.id}-input-error`);
+  }
+
+  _checkInvalidInput() {
+      return this._formInputElements.every((inputElement) => {
+        if(inputElement.value.length === 0) {return false};
+          return inputElement.validity.valid;         
+      });
+  }
+
+  _setFormInputElements() {
+      this._formInputElements = Array.from(
+          this._formElement.querySelectorAll(this._settings.inputSelector),
+      );
+  }
+
+  _clearFormInputElements() {
+      this._formInputElements.forEach((inputElement) => {
+          inputElement.value = "";
+      });
+  }
+
+  _setFormButtons() {
+      this._buttonElement = this._formElement.querySelector(
+          this._settings.submitButtonSelector,
+        );
+  }
+
+  _toggleSubmitButton() {
+      this._checkInvalidInput() ? this._enableButton() : this._disableButton();
+  }
+
+  _disableButton() {
+      this._buttonElement.classList.add(this._settings.inactiveButtonClass);
+      this._buttonElement.disabled = true;
+  }
+
+  _enableButton() {
+      this._buttonElement.classList.remove(this._settings.inactiveButtonClass);
+      this._buttonElement.disabled = false;
+  }
+
+  _setEventListeners() {   
+      this._toggleSubmitButton();
+    
+      this._formInputElements.forEach((inputElement) => {
+        inputElement.addEventListener("input", () => {
+          this._checkFieldValidity(inputElement);
+          this._toggleSubmitButton();
+        });
+      });
+    };
 }
 
-function checkInputFieldValidity(inputFieldArray) {
-  return inputFieldArray.every((inputField) => {
-    return inputField.validity.valid;
-  });
-}
 
-function checkInputFieldsFilled(inputFieldArray) {
-  return inputFieldArray.every((inputField) => {
-    console.log(inputField.value);
-    return !!inputField.value;
-  });
-}
+// export default function enableValidation(settings) {
+//   const formsArray = Array.from(document.querySelectorAll(settings.formSelector));
+//   const inputFields = getInputFieldsFromForms(formsArray);
+//   setAllFieldValidationListeners(inputFields);
+// };
 
-function getSubmitButtonFromForm(form) {
-  return form[settings.submitButtonName];
-}
+// function onFieldInput(event) {
+//   validationDebug(event, arguments.callee.name);
+//   const inputValidity = checkInputValidity(event);
+//   const inputField = event.target;
+//   const submitButton = getSubmitButtonFromInputField(inputField);
+//   const inputForm = inputField.closest('form');
+//   checkFieldInputErrors(inputField, inputValidity); 
+//   submitButtonStateHandler(submitButton, checkFormInputFieldValidity(inputForm));
+// }
 
-function getSubmitButtonFromInputField(inputField) {
-  validationDebug(inputField.closest(settings.formSelector).id, arguments.callee.name);
-  return document.querySelector(`.${inputField.closest(settings.formSelector).id}-submit-button`);
-}
+// function resetModalForm(modal) {
+//   const inputFields = getFormInputFieldsArray(modal.querySelector(settings.formSelector));
+//   inputFields.forEach(inputField => resetInputField(inputField));
+//   disableSubmitButton(modal.querySelector(settings.submitButtonSelector));
+// }
 
-function enableSubmitButton(submitButton) {
-  console.log(submitButton);
-  submitButton.classList.remove(settings.inactiveButtonClass);
-  submitButton.disabled = false;
-}
+// function resetInputField(inputField) {
+//   inputField.textContent = "";
+//   deactivateValidationError(inputField);
+// }
 
-function disableSubmitButton(submitButton) {
-  submitButton.classList.add(settings.inactiveButtonClass);
-  submitButton.disabled = true;
-}
+// function checkFormFieldInputErrors(form) {
+//   getFormInputFieldsArray(form).forEach(field => checkFieldInputErrors(field));
+// }
 
-function checkInputValidity(event) {
-  validationDebug(`${event.target.validity.valid}`, arguments.callee.name);
-  return event.target.validity.valid;
-}
+// function checkFieldInputErrors(inputField, inputValidity) {
+//   inputValidity ? deactivateValidationError(inputField) : activateValidationError(inputField);
+// }
 
-function activateValidationError(inputField) {
-  const errorElement = getValidationErrorElement(inputField);
-  const errorValidationMessage = getValidationErrorMessage(inputField);
+// function submitButtonStateHandler(submitButton, stateBool) {
+//   stateBool ? enableSubmitButton(submitButton) : disableSubmitButton(submitButton); 
+// }
+
+// function updateSubmitButtonFromFormValidity(form) {
+//   // validationDebug(form, arguments.callee.name);
+//   console.log(checkFormInputFieldValidity(form));
+//   submitButtonStateHandler(getSubmitButtonFromForm(form), checkFormInputFieldValidity(form));
+// }
+
+// function checkFormInputFieldValidity(form) {
+//   const inputFieldArray = getFormInputFieldsArray(form);
+//   // validationDebug(checkInputFieldValidity(inputFieldArray) && checkInputFieldsFilled(inputFieldArray), arguments.callee.name);
+//   if(!checkInputFieldsFilled) {
+//     return false;
+//   }
+//   return checkInputFieldValidity(inputFieldArray);
+// }
+
+// function checkInputFieldValidity(inputFieldArray) {
+//   return inputFieldArray.every((inputField) => {
+//     return inputField.validity.valid;
+//   });
+// }
+
+// function checkInputFieldsFilled(inputFieldArray) {
+//   return inputFieldArray.every((inputField) => {
+//     console.log(inputField.value);
+//     return !!inputField.value;
+//   });
+// }
+
+// function getSubmitButtonFromForm(form) {
+//   return form[settings.submitButtonName];
+// }
+
+// function getSubmitButtonFromInputField(inputField) {
+//   validationDebug(inputField.closest(settings.formSelector).id, arguments.callee.name);
+//   return document.querySelector(`.${inputField.closest(settings.formSelector).id}-submit-button`);
+// }
+
+// function enableSubmitButton(submitButton) {
+//   console.log(submitButton);
+//   submitButton.classList.remove(settings.inactiveButtonClass);
+//   submitButton.disabled = false;
+// }
+
+// function disableSubmitButton(submitButton) {
+//   submitButton.classList.add(settings.inactiveButtonClass);
+//   submitButton.disabled = true;
+// }
+
+// function checkInputValidity(event) {
+//   validationDebug(`${event.target.validity.valid}`, arguments.callee.name);
+//   return event.target.validity.valid;
+// }
+
+// function activateValidationError(inputField) {
+//   const errorElement = getValidationErrorElement(inputField);
+//   const errorValidationMessage = getValidationErrorMessage(inputField);
   
-  activateErrorFieldStyle(inputField);
-  setErrorElementMessage(errorElement, errorValidationMessage);
-  showErrorElementMessage(errorElement);
-}
+//   activateErrorFieldStyle(inputField);
+//   setErrorElementMessage(errorElement, errorValidationMessage);
+//   showErrorElementMessage(errorElement);
+// }
 
-function deactivateValidationError(inputField) {
-  //validationDebug(`${event}`, arguments.callee.name);
-  const errorElement = getValidationErrorElement(inputField);
+// function deactivateValidationError(inputField) {
+//   //validationDebug(`${event}`, arguments.callee.name);
+//   const errorElement = getValidationErrorElement(inputField);
 
-  deactivateErrorFieldStyle(inputField);
-  setErrorElementMessage(errorElement, "");
-  hideErrorElementMessage(errorElement);
-}
+//   deactivateErrorFieldStyle(inputField);
+//   setErrorElementMessage(errorElement, "");
+//   hideErrorElementMessage(errorElement);
+// }
 
-function activateErrorFieldStyle(inputField) {
-  inputField.classList.add(settings.inputErrorStyle);
-}
+// function activateErrorFieldStyle(inputField) {
+//   inputField.classList.add(settings.inputErrorStyle);
+// }
 
-function deactivateErrorFieldStyle(inputField) {
-  inputField.classList.remove(settings.inputErrorStyle);
-}
+// function deactivateErrorFieldStyle(inputField) {
+//   inputField.classList.remove(settings.inputErrorStyle);
+// }
 
-function showErrorElementMessage(errorElement) {
-  errorElement.classList.add(settings.errorClass);
-}
+// function showErrorElementMessage(errorElement) {
+//   errorElement.classList.add(settings.errorClass);
+// }
 
-function hideErrorElementMessage(errorElement) {
-  errorElement.classList.remove(settings.errorClass);
-}
+// function hideErrorElementMessage(errorElement) {
+//   errorElement.classList.remove(settings.errorClass);
+// }
 
-function setErrorElementMessage(errorElement, message) {
-  return errorElement && message ? errorElement.textContent = message : false;
-}
+// function setErrorElementMessage(errorElement, message) {
+//   return errorElement && message ? errorElement.textContent = message : false;
+// }
 
-function getValidationErrorElement(inputField) {
-  return document.querySelector(`.${inputField.id}-input-error`);
-}
+// function getValidationErrorElement(inputField) {
+//   return document.querySelector(`.${inputField.id}-input-error`);
+// }
 
-function getValidationErrorMessage(inputField) {
-  //validationDebug(`getValidationError: ${event.target.validationMessage}`, arguments.callee.name);
-  return inputField.validationMessage ? inputField.validationMessage : "Unknown validation error";
-}
+// function getValidationErrorMessage(inputField) {
+//   //validationDebug(`getValidationError: ${event.target.validationMessage}`, arguments.callee.name);
+//   return inputField.validationMessage ? inputField.validationMessage : "Unknown validation error";
+// }
 
-function setAllFieldValidationListeners(inputFields) {
-  inputFields.forEach(field => setFieldValidationListeners(field));
-}
+// function setAllFieldValidationListeners(inputFields) {
+//   inputFields.forEach(field => setFieldValidationListeners(field));
+// }
 
-function setFieldValidationListeners(inputField) {
-    inputField.addEventListener('input',onFieldInput);
-    inputField.addEventListener('paste',onFieldInput);
-}
+// function setFieldValidationListeners(inputField) {
+//     inputField.addEventListener('input',onFieldInput);
+//     inputField.addEventListener('paste',onFieldInput);
+// }
 
-function getInputFieldsFromForms(formsArray) {
-  let inputFieldsArray = [];
-  formsArray.forEach((form) => getFormInputFieldsArray(form)
-    .forEach(inputField => inputFieldsArray.push(inputField)));
-  return inputFieldsArray;
-}
+// function getInputFieldsFromForms(formsArray) {
+//   let inputFieldsArray = [];
+//   formsArray.forEach((form) => getFormInputFieldsArray(form)
+//     .forEach(inputField => inputFieldsArray.push(inputField)));
+//   return inputFieldsArray;
+// }
 
-function getFormInputFieldsArray(formElement) {
-  return Array.from(formElement.querySelectorAll(settings.inputSelector));
-}
+// function getFormInputFieldsArray(formElement) {
+//   return Array.from(formElement.querySelectorAll(settings.inputSelector));
+// }
 
-function validationDebug(logMessage, calledFunc = "unlabeled function") {
-  if(settings.debugging) {
-    if (typeof logMessage === 'object' || Array.isArray(logMessage)) {
-      console.log(`===debug log: ${calledFunc}===`);
-      console.log(logMessage);
-    } else {
-      console.log(`debug log: ${calledFunc} :: ${logMessage}`);
-  }
-}
-}
+// function validationDebug(logMessage, calledFunc = "unlabeled function") {
+//   if(settings.debugging) {
+//     if (typeof logMessage === 'object' || Array.isArray(logMessage)) {
+//       console.log(`===debug log: ${calledFunc}===`);
+//       console.log(logMessage);
+//     } else {
+//       console.log(`debug log: ${calledFunc} :: ${logMessage}`);
+//   }
+// }
+// }
 
 
 
