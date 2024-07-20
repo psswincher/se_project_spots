@@ -15,7 +15,13 @@
             </header>
             <main class="content">
             <section class="profile page__section">
-                <img class="profile__avatar" src="<%=require('./src/images/Avatar.png')%>" alt="User Avatar">
+                <div class="profile__avatar-container">
+                        <img class="profile__avatar" src="<%=require('./src/images/Avatar.png')%>" alt="User Avatar">
+                        <button class="profile__edit-avatar-button" type="button">
+                            <img class ="profile__avatar-pencil-icon" src="<%=require('./src/images/edit-pencil-white.svg')%>" alt="Pencil Icon">
+                            <p class="profile__edit-avatar-button-text">Edit Avatar</p>
+                        </button>
+                </div>
                 <div class="profile__column">
                     <h1 class = "profile__name">Aliaune Damala Bouga Time Bongo Puru Nacka Lu Lu Lu Badara Akon...</h1>
                     <p class="profile__description">Known mononymously as Akon (/ˈeɪkɒn/), is a Senegalese-American singer, record producer, and entrepreneur. An influential figure in modern world...</p>
@@ -68,15 +74,31 @@
                 <form name="new-post-modal" class="modal__form" id="new-post-modal__form" novalidate>
                     <label for="link" class="modal__label">
                         Image link
-                        <input name="post-image-link" id="link" class="modal__input" required type="url" required/>
+                        <input name="post-image-link" id="link" class="modal__input" type="url" required/>
                         <span class="modal__input_type_error link-input-error"  id="link-input-error"></span>
                     </label>
                     <label for="caption" class="modal__label">
                         Caption
-                        <input name="post-caption" id="caption" type="text" class="modal__input" required minlength="2" maxlength="30" required/>
+                        <input name="post-caption" id="caption" type="text" class="modal__input" minlength="2" maxlength="30" required/>
                         <span class="modal__input_type_error caption-input-error" id="caption-input-error"></span>
                     </label>
                     <button id="new-post-modal__form-submit-button" name="modal__submit-button" type="submit" class="modal__submit-button modal__button_disabled new-post-modal__form-submit-button" disabled>Save</button>
+                </form>
+            </div>
+        </div>
+        <div class="modal" id="edit-avatar-modal">
+            <div class="modal__container">
+                <button type="button" class="modal__close-button" id="new-post-modal__close">
+                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>">
+                </button>
+                <h2 class="modal__title">Edit profile avatar</h2>
+                <form name="edit-avatar-modal" class="modal__form" id="edit-avatar-modal__form" novalidate>
+                    <label for="avatar-link" class="modal__label">
+                        Profile picture
+                        <input name="avatar-link" id="avatar-link" class="modal__input" type="url" required/>
+                        <span class="modal__input_type_error avatar-link-input-error"  id="avatar-link-input-error"></span>
+                    </label>
+                    <button id="edit-avatar-modal__form-submit-button" name="modal__submit-button" type="submit" class="modal__submit-button modal__button_disabled edit-avatar-modal__form-submit-button" disabled>Save</button>
                 </form>
             </div>
         </div>
@@ -89,9 +111,19 @@
                 <h2 class="modal__title_preview" id="preview-title"></h2>
             </div>
         </div>
+        <div class="modal" id="confirm-modal">
+            <div class="modal__container">
+                <button type="button" class="modal__close-button" id="new-post-modal__close">
+                    <img class="modal__close-icon" src="<%=require('./src/images/close-button.svg')%>">
+                </button>
+                <h2 class="modal__title">Are you sure you want to delete this image?</h2>
+                <button id="confirm-modal" name="modal__button" type="button" class="modal__button-confirm">Delete</button>
+                <button id="cancel-modal" name="modal__button" type="button" class="modal__button-cancel">Cancel</button>
+            </div>
+        </div>
         <template id="card">
             <li class="card">
-                <img class="card__image" src=`${cardImageSource}` alt=`${cardTitle}`>
+                <img class="card__image" src="" alt="">
                 <button type="button" class="card__delete-button">
                     <img class="card__delete-image" src="<%=require('./src/images/trash-can.svg')%>" alt="Delete Photo">
                 </button>

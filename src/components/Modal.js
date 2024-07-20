@@ -1,10 +1,9 @@
 import { modalSelectors } from "../utils/constants.js";
-import { cardSettings } from "../utils/constants.js";
 
 export default class Modal {
     constructor( { modalSelector } ) {
-        this._modalElement = document.querySelector(modalSelector);
         this._modalSelector = modalSelector;
+        this._modalElement = document.querySelector(modalSelector);
         this._handleEscapeClose = this._handleEscapeClose.bind(this); 
         this._closeButton = this._modalElement.querySelector(modalSelectors.modalCloseButton);
 

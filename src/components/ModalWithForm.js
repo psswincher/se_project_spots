@@ -50,7 +50,6 @@ export default class ModalWithForm extends Modal {
 
     setPlaceholderInputs(defaultsObject) {
         this._inputFields.forEach((field) => {
-            console.log(field.name);
             if (defaultsObject[field.name]) field.setAttribute('placeholder', defaultsObject[field.name]);
         })
     }
