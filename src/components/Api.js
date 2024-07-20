@@ -33,7 +33,7 @@ export default class Api {
             if (res.ok) {
             return res.json();
         } 
-        return Promise.reject(`Error: ${res.status}`);
+        return Promise.reject(`API request Error: ${res.status}`);
             })
         .catch((err) => {
             console.error(err); // log the error to the console
@@ -88,29 +88,22 @@ export default class Api {
         })
     }
 
-    getInitialCards() {
-        console.log('getting initial cards');
-        return fetch("https://around-api.en.tripleten-services.com/v1/cards", {
-            headers: {
-              authorization: "0ba3486c-b117-4196-b741-be8eda3e197d",
-              "Content-Type": "application/json"
-            }
-    })
-        .then((res) => {
-            if (res.ok) {
-                console.log(res);
-            return res.json();
-        } 
-        return Promise.reject(`Error: ${res.status}`);
-    })
-    .then((data) => {
-        console.log('data found');
-        console.log(data);
-    })
-    .catch((err) => {
-        console.error(err); // log the error to the console
-      });
-        
+    getBatchData(route) {
+        return new Promise((resolve) => {
+            this.request(route)
+            .then((data) => {
+                resolve(Promise.all(data))
+            })
+        })
+    }
+
+    getInitialUserData() {
+        return new Promise((resolve) => {
+            this.request(routes.getUserInfo)
+            .then((data) => {
+                resolve(Promise.all(data))
+            })
+        })
     }
 }
     // parseCards(data) {

@@ -37,7 +37,7 @@
     margin: 0 0 32px;
 }
 
-.modal__submit-button {
+.modal__button {
     margin: 0;
     border-radius: 8px;
     padding: 18px 32px;
@@ -47,6 +47,40 @@
     color: rgba(252, 245, 229, 1);
     cursor: pointer;
 }
+
+/* .modal__submit-button {
+    margin: 0;
+    border-radius: 8px;
+    padding: 18px 32px;
+    max-height: 52px;
+    max-width: 156px;
+    background-color: black;
+    color: rgba(252, 245, 229, 1);
+    cursor: pointer;
+} */
+
+.modal__button:hover {
+    background-color: rgba(33, 33, 33, 0.8)
+}
+
+.modal__button-confirm {
+    background-color: rgba(255, 101, 101, 1)
+}
+
+.modal__button-confirm:hover {
+    background-color: rgba(255, 51, 51, 1)
+}
+
+.modal__button-cancel {
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(33, 33, 33, 1);
+}
+
+.modal__button-cancel:hover {
+    background-color: rgba(33, 33, 33, 1);
+    color: rgba(255, 255, 255, 1);
+}
+
 
 .modal__submit-button:hover {
     background-color: rgba(33, 33, 33, 0.8)
@@ -221,8 +255,9 @@
         font-size: 1.25rem;
         line-height: 1.25rem;
     }
-
+    
     .modal__submit-button {
+        margin: 0 auto;
         width: 100%;
         max-width: 300px;
     }

@@ -1,9 +1,10 @@
 export default class Section {
-    constructor({ renderer, containerSelector }) {
+    constructor({ renderer, containerSelector, initialize }) {
         this._items = "";
         this._renderer = renderer;
         this._containerSelector = containerSelector;
         this._container = document.querySelector(this._containerSelector);
+        this.initialize = initialize;
     }
 
     renderItems() {
@@ -30,9 +31,4 @@ export default class Section {
         this._items.internalHTML = ""
     }
 
-    // getLastElement() {
-    //     console.log(this._container);
-    //     console.log(this._items[this._items.length - 1]);
-    //     return this._items[this._items.length - 1];
-    // }
 }

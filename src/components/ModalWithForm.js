@@ -3,6 +3,8 @@ import Modal from "./Modal.js";
 export default class ModalWithForm extends Modal {
     constructor({ modalSelector, onSubmitCallback } ) {
         super({ modalSelector });
+
+        //note: onSubmitCallback must always return a promise.
         this._onSubmitCallback = onSubmitCallback;
         this._submitButton = this._modalElement.querySelector(".modal__submit-button");
         this._inputFields = this._modalElement.querySelectorAll('.modal__input');
@@ -15,7 +17,7 @@ export default class ModalWithForm extends Modal {
         return this._form;
     }
 
-    _reset() {
+    _resetInputs() {
         this._inputFields.forEach((field) => {
             field.value = "";
         })
@@ -37,11 +39,27 @@ export default class ModalWithForm extends Modal {
 
     _onSubmit(evt) {
         evt.preventDefault();
-        this._onSubmitCallback(this._getInputValues());
-        this._reset();
-        this.close();
+        this._setSubmitToSubmitting();
+        this._onSubmitCallback(this._getInputValues())
+        .then(() => {
+            this._resetInputs();
+            this._setSubmitToSubmit();
+            this.close();
+        })
+        .catch(() =>{
+            this._setSubmitToSubmit();
+        })
+        
     }
     
+    _setSubmitToSubmitting() {
+        this._submitButton.textContent = "Submitting...";
+    }
+
+    _setSubmitToSubmit() {
+        this._submitButton.textContent = "Submit";
+    }
+
     setDefaultInputs(defaultsObject) {
         this._inputFields.forEach((field) => {
             if (defaultsObject[field.name]) field.value = defaultsObject[field.name];
