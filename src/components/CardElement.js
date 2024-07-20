@@ -56,8 +56,6 @@ export default class CardElement {
 
     setCardImage(imageLink) {
         this.imageLink = imageLink;
-        //how can I make sure the image is loaded before we setAttribute?
-        //feels not in scope atm but I really, really want to fix it.
         this._cardImage.setAttribute('src', this.imageLink);
     }
 

@@ -16,51 +16,47 @@ const dbApi = new Api({
       "Content-Type": "application/json"
     }
   });
+  const userConfirmModal = new ModalConfirm({modalSelector: modalSelectors.confirmModalSelector});
 
-const userConfirmModal = new ModalConfirm({modalSelector: modalSelectors.confirmModalSelector});
-
-const cardSection = new Section({ 
-    containerSelector: '.cards__list',
+  const cardSection = new Section({ 
     renderer: (card) => {
       const newCard = makeNewCard(card);
-      cardSection.addItem(newCard); 
-    }, 
-    initialize: (route) => {
-        dbApi.getBatchData(route)
-        .then((data) => {
-                cardSection.setItems(data);
-                cardSection.renderItems();
-             });
-    }
-});
+      cardSection.addItem(newCard);
+  }, containerSelector: '.cards__list'});
 
-cardSection.initialize(routeData.getCards);
-  
-
-const userProfile = new UserProfile({initialize: () => {
-    dbApi.request(routeData.getUserInfo)
+  dbApi.request(routeData.getCards)
     .then((data) => {
-            userProfile.setProfileData({userName: data.name, profileDescription: data.about, imageUrl: data.avatar});
-            editProfileForm.setDefaultInputs(userProfile.getUserProfile());
-        })
+        return new Promise((resolve) => {
+            cardSection.setItems(data);
+            resolve();
+        }); })
+    .then((res) => {
+        cardSection.renderItems();
+    })
     .catch((err) => {
-        console.error(`Failed to get user data: ${err}`);
+        console.error(`Failed to create initial cards: ${err}`);
     });
-    }
-});
 
-userProfile.initialize();
+const userProfile = new UserProfile;
+
+dbApi.request(routeData.getUserInfo)
+.then((data) => {
+    return new Promise((resolve) => {
+        userProfile.setProfileData({userName: data.name, profileDescription: data.about, imageUrl: data.avatar});
+        editProfileForm.setDefaultInputs(userProfile.getUserProfile());
+        resolve();
+    });    
+})
+.catch((err) => {
+    console.error(`Failed to get user data: ${err}`);
+});
 
 const editAvatarForm = new ModalWithForm({modalSelector: modalSelectors.editAvatarSelector,
     onSubmitCallback: (inputValues) => {
-        return new Promise((resolve, reject) =>{ 
-            dbApi.request(routeData.updateUserAvatar, { avatar: inputValues['avatar-link'] })
-            .then(() => {
-                userProfile.setUserImage(inputValues['avatar-link']);
-                resolve();
-            })
-            .catch(() => reject());
-        }) 
+        dbApi.request(routeData.updateUserAvatar, { avatar: inputValues['avatar-link'] })
+        .then(() => {
+            userProfile.setUserImage(inputValues['avatar-link']);
+        })
     }
 })
 
@@ -69,41 +65,44 @@ editAvatarFormValidator.enableValidation();
  
 const editProfileForm = new ModalWithForm({ modalSelector: modalSelectors.editProfileModal,
     onSubmitCallback: (inputValues) => {
-        return new Promise((resolve, reject) => {
-            dbApi.request(routeData.updateUserProfile, { name: inputValues['profile-name'], about: inputValues['profile-description']})
-                .then(() => {
-                        userProfile.setUserName(inputValues['profile-name']);
-                        userProfile.setUserDescription(inputValues['profile-description']);
-                        editProfileForm.setDefaultInputs(userProfile.getUserProfile());
-                        resolve();
-                })
-                .catch((err) => {
-                    console.error(`Failed to edit profile: ${err}`);
-                    reject();
-                });    
-            });  
+        dbApi.request(routeData.updateUserProfile, { name: inputValues['profile-name'], about: inputValues['profile-description']})
+        .then((data) => {
+            return new Promise((resolve) => {
+                //note: if the api request doesn't resolve, then we shouldn't update user info.
+                //Should we alert the user that it didn't go through?
+                userProfile.setUserName(inputValues['profile-name']);
+                userProfile.setUserDescription(inputValues['profile-description']);
+                //TO DO: this seems to clear after submission, rather than update?
+                editProfileForm.setDefaultInputs(userProfile.getUserProfile());
+                resolve();
+            })
+        })
+        .catch((err) => {
+            console.error(`Failed to edit profile: ${err}`);
+        });        
         }
     });
 
 const editProfileFormValidator = new FormValidator(validationSettings, editProfileForm.getFormElement());
 editProfileFormValidator.enableValidation();
 
-const newPostForm = new ModalWithForm({ modalSelector: '#post-modal', 
-    onSubmitCallback: (inputValues) => {
-        return new Promise((resolve, reject) => {
-            const newPostTitle = inputValues['post-caption'];
-            const newPostImageLink = inputValues['post-image-link'];
-            dbApi.request(routeData.createCard, { name: newPostTitle, link: newPostImageLink })
-            .then(() => {
-                        const newCard = makeNewCard({name: newPostTitle, imageLink: newPostImageLink })
-                        cardSection.addItem(newCard);
-                        resolve();
-                })
-            .catch((err) => {
-                console.error(`Failed to create new post: ${err}`);
-                reject();
+const newPostForm = new ModalWithForm({ modalSelector: '#post-modal', onSubmitCallback: (inputValues) => {
+        const newPostTitle = inputValues['post-caption'];
+        const newPostImageLink = inputValues['post-image-link'];
+         dbApi.request(routeData.createCard, { name: newPostTitle, link: newPostImageLink })
+        .then((data) => {
+            return new Promise((resolve, reject) => {
+                if(data) {
+                    const newCard = makeNewCard({name: newPostTitle, imageLink: newPostImageLink })
+                    cardSection.addItem(newCard);
+                    resolve();
+                }   
+                reject(err);
             });
+        }).catch((err) => {
+            console.error(`Failed to create new post: ${err}`);
         });
+        
     }
 });
 

@@ -1,14 +1,13 @@
 import { userProfileSettings } from "../utils/constants.js"; 
 
 export default class UserProfile {
-    constructor({ userName = userProfileSettings.defaultUsername, profileDescription = userProfileSettings.defaultDescription, imageUrl = userProfileSettings.defaultProfileImage, initialize } = {}) {
+    constructor({ userName = userProfileSettings.defaultUsername, profileDescription = userProfileSettings.defaultDescription, imageUrl = userProfileSettings.defaultProfileImage } = {}) {
         this._userName = document.querySelector(userProfileSettings.profileNameSelector);
         this._userProfileDescription = document.querySelector(userProfileSettings.profileDescriptionSelector);
         this._userProfileAvatar = document.querySelector(userProfileSettings.profileAvatarSelector);
         this.setUserName(userName);
         this.setUserDescription(profileDescription);
         this.setUserImage(imageUrl);
-        this.initialize = initialize;
     }
 
     setUserName(userName = userProfileSettings.defaultUsername) {
