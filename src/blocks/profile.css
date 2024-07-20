@@ -5,57 +5,11 @@
     grid-template-columns: 210px 420px 1fr;
 }
 
-.profile__avatar-container {
-    display: grid;
-    grid-template: 1fr 1fr;
-    place-items: center;
+.profile__avatar {
     height: 190px;
     width: 190px;
     margin-right: 20px;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.profile__avatar {
-    grid-row: 1;
-    grid-column: 1;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
     border-radius: 8px;
-}
-
-.profile__edit-avatar-button {
-    grid-row: 1;
-    grid-column: 1;
-    height: 100%;
-    width: 100%;
-    border-radius: 8px;
-    background-color:rgba(0, 0, 0);
-    opacity: 0;
-    display: flex;
-    color: rgba(255, 255, 255, 1);
-    cursor: pointer;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 12px;
-    transition: opacity .2s ease;
-    border: none;
-}
-
-.profile__avatar-pencil-icon {
-    height: 16px;
-    padding: 0;
-    margin: 0 8px 0 0;
-}
-
-.profile__edit-avatar-button:hover {
-    opacity: 50%;
-}
-
-.profile__edit-avatar-button-text {
-    margin: 0;
-    padding: 0;
 }
 
 .profile__column {
@@ -134,6 +88,7 @@
     transition: opacity 0.2s ease;
     font-size: 16px;
     cursor: pointer;
+
 }
 
 .profile__add-button:hover {
@@ -147,7 +102,7 @@
         justify-items: center;
     }
 
-    .profile__avatar-container {
+    .profile__avatar {
         margin: 0;
     }
     
@@ -157,6 +112,7 @@
         margin: 0 auto;
         margin-top: 12px;
         margin-bottom: 20px;   
+        /* height: auto; */
         text-align: center;
     }
 
@@ -181,34 +137,9 @@
 
 @media screen and (max-width: 500px) {
 
-    .profile__avatar-container {
+    .profile__avatar {
         height: 80px;
         width: 80px;
-        background-color: none;
-    }
-
-    .profile__edit-avatar-button {
-        height: 23.34px;
-        width: 23.34px;
-        opacity: 50%;
-        justify-content: center;
-        align-items: center;
-        margin-top: 52px;
-        margin-left: 52px;
-        padding: 0;
-
-    }
-
-    .profile__edit-avatar-button:hover {
-
-    }
-
-    .profile__avatar-pencil-icon {
-        margin: 0;
-    }
-
-    .profile__edit-avatar-button-text {
-        display: none;
     }
 
 }

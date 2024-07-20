@@ -1,19 +1,10 @@
 import { cardSelectors } from "../utils/constants.js";
 import { cardSettings } from "../utils/constants.js";
 
-// {
-//     "isLiked": false,
-//     "_id": "64a55f2a91758c001af2a1bd",
-//     "name": "The card's name",
-//     "link": "https://example.com/image.png",
-//     "owner": "e20537ed11237f86bbb20ccb",
-//     "createdAt": "2023-07-05T12:16:42.240Z"
-// }
-
 export default class CardElement {
 
-    constructor({ name, link, isLiked, id, imageClickManager, onDeleteAPIManager, onLikeAPIManager } ) {
-        this.id = id;
+    constructor({ title, imageLink, imageClickManager }) {
+
         this._cardTemplate = document.querySelector(cardSelectors.template);
         this._cardElement = this._cardTemplate.content.querySelector(".card").cloneNode(true);
         this._cardImage = this._cardElement.querySelector(cardSelectors.image); 
@@ -24,16 +15,14 @@ export default class CardElement {
         this._cardUnlikedImage = this._cardElement.querySelector(cardSelectors.unlikedImage);
         this._cardLikedImage = this._cardElement.querySelector(cardSelectors.likedImage);
         
-        this._onDeleteAPIManager = onDeleteAPIManager;
+        this._onDeleteClick = this._onDeleteClick.bind(this); 
 
-        this._onLikeAPIManager = onLikeAPIManager;
-        
         this._imageClickManager = imageClickManager;
-        this.setTitle(name);
-        this.setCardImage(link);
-        this.setCardImageAlt(name);
+
+        this.setTitle(title);
+        this.setCardImage(imageLink);
+        this.setCardImageAlt(title);
         this._setEventListeners();
-        this._setLike(isLiked);
         
     }
 
@@ -46,7 +35,7 @@ export default class CardElement {
     setTitle(title) {
         if(typeof title === 'string') {
             this.titleText = title;
-            this._titleElement.textContent = this.titleText;
+            this._titleElement.textContent = this._titleText;
         } else {
             console.log(`New card title is not a string. Setting to default.`);
             this.titleText = cardSettings.defaultTitle;
@@ -64,30 +53,17 @@ export default class CardElement {
         this._cardImage.setAttribute('alt', this.imageAltText);
     }
 
-    _setLike(bool) {
-        bool ? this.activateLikeButton() : this.deactivateLikeButton();
-    }
-
     onLikeClick() {
-        if(this.isLikeActive()) {
-            this._onLikeAPIManager(this.id, false)
-            .then((result) => { if (result) this.deactivateLikeButton() })
-        }  
-        else {
-            this._onLikeAPIManager(this.id, true)
-            .then((result) => { if (result) this.activateLikeButton() })
-        } 
+        this.isLikeActive() ? this.deactivateLikeButton() : this.activateLikeButton();
     }
 
     isLikeActive() {
-        //this logic implemented before API was implemented.
-        //should the server be the authority? or the browser?
         return !this._cardLikedImage.classList.contains('card__liked-image__inactive');
     }
 
-    activateLikeButton() { 
-            this._cardLikedImage.classList.remove('card__liked-image__inactive');
-            this._cardUnlikedImage.classList.add('card__unliked-image__inactive');
+    activateLikeButton() {
+        this._cardLikedImage.classList.remove('card__liked-image__inactive');
+        this._cardUnlikedImage.classList.add('card__unliked-image__inactive');
     }
 
     deactivateLikeButton() {
@@ -95,13 +71,13 @@ export default class CardElement {
         this._cardUnlikedImage.classList.remove('card__unliked-image__inactive');
     }
 
-    remove() {
+    _remove() {
+        console.log(this._cardElement);
         this._cardElement.remove();
     }
 
     _onDeleteClick() {
-        this._onDeleteAPIManager(this.id)
-        .then(result => {if(result) this.remove();})
+        this._remove();
     }
 
     onImageClick() {
@@ -111,5 +87,4 @@ export default class CardElement {
     getView() {
         return this._cardElement;
     }
-
 }

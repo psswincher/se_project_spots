@@ -10,6 +10,15 @@ export const validationSettings = {
     debugging: true,
   }
 
+  export const initialCards = [
+    {title: "5-minute Dungeon", imageLink: "https://vigilantebar.com/wp-content/uploads/2022/08/5-Minute-Dungeon-scaled.jpg"},
+    {title: "7 Wonders", imageLink: "https://vigilantebar.com/wp-content/uploads/2020/06/pic860217.jpg"},
+    {title: "Abduction", imageLink: "https://vigilantebar.com/wp-content/uploads/2023/08/71Z8QTM8qXL._AC_UF8941000_QL80_.jpg"},
+    {title: "Agricola", imageLink: "https://vigilantebar.com/wp-content/uploads/2022/08/Agricola.jpg"},
+    {title: "Black Fleet", imageLink: "https://vigilantebar.com/wp-content/uploads/2022/08/Black-Fleet.jpg"},
+    {title: "Call to Adventure", imageLink: "https://vigilantebar.com/wp-content/uploads/2022/08/Call-to-Adventure-scaled.jpg"}
+]
+
 export const cardSelectors = {
   template: '#card',
   image: '.card__image', 
@@ -33,35 +42,10 @@ export const modalSelectors = {
   modalCloseButton: ".modal__close-button",
   previewModalImage: ".modal__preview-image",
   previewModalTitle: "#preview-title",
-  confirmModalSelector: "#confirm-modal",
-  modalConfirmButtonSelector: ".modal__confirm-button",
-  modalCancelButtonSelector: ".modal__cancel-button",
-  editAvatarSelector: "#edit-avatar-modal",
+
 }
 
 export const newPostModalPlaceholders = {
-  "post-image-link": "Paste a link to the picture",
-  "post-caption": "Type your caption"
-}
-
-export const userProfileSettings = {
-  defaultUsername: "Please input name",
-  defaultDescription: "Please input description",
-  defaultProfileImage: "https://www.imdb.com/name/nm1120169/mediaviewer/rm782485249/?ref_=nm_ov_ph",
-  profileNameSelector: ".profile__name",
-  profileDescriptionSelector: ".profile__description",
-  profileAvatarSelector: ".profile__avatar"
-}
-
-export const routeData = {
-  getUserInfo: {method: 'GET', route: '/users/me'},
-  updateUserProfile: {method: 'PATCH', route: '/users/me'},
-  updateUserAvatar: {method: 'PATCH', route: '/users/me/avatar'},
-  getCards: {method: 'GET', route: '/cards'},
-  createCard: {method: 'POST', route: '/cards'},
-  deleteCardById: {method: 'DELETE', route: '/cards/'},
-  likeCardUpdateRoute: {method: 'PUT', route: '/cards/:cardId/likes'},
-  dislikeCardUpdateRoute: {method: 'DELETE', route: '/cards/:cardId/likes'},
-  
-  likeCardReplaceKey: ":cardId",
+  "post-image-link": 'Paste a link to the picture',
+  "post-caption": 'Type your caption'
 }
