@@ -1,9 +1,5 @@
 import Modal from "./Modal.js"
 import { modalSelectors } from "../utils/constants.js";
-
-//I built this approach before reading through the recommended way in the project brief.
-//I wanted a reusable confirm/cancel modal logic that would
-//return the user's input inside any other logic in index.js. 
  
 export default class ModalConfirm extends Modal {
     constructor({ modalSelector, confirmText = "Confirm", awaitingConfirmText = "Confirming...", cancelText = "Cancel" } ={})
@@ -34,14 +30,12 @@ export default class ModalConfirm extends Modal {
       }
 
     _onCancelClick() {
-        console.log("on cancel clicked");
         this._modalElement.removeEventListener('click', this.handler);
         this.close();
         return false;
     }
 
     _onConfirmClick() {
-        console.log("on confirm clicked");
         this._modalElement.removeEventListener('click', this.handler);
         this.close();
         return true;
