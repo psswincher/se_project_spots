@@ -17,8 +17,6 @@ const dbApi = new Api({
     }
   });
 
-const userConfirmModal = new ModalConfirm({modalSelector: modalSelectors.confirmModalSelector});
-
 const cardSection = new Section({ 
     containerSelector: '.cards__list',
     renderer: (card) => {
@@ -134,6 +132,11 @@ function onEditProfileClick() {
 function onNewPostClick() { 
     newPostForm.open();
 }
+const userConfirmDeleteModal = new ModalConfirm({
+    modalSelector: modalSelectors.confirmModalSelector, 
+    confirmText: "Delete", 
+    awaitingConfirmText: "Deleting...",
+});
 
 function makeNewCard({ name, link, isLiked, _id }) {
     let newCard;
@@ -143,17 +146,22 @@ function makeNewCard({ name, link, isLiked, _id }) {
         previewImageModal.open();
     }
 
-    const onDeleteAPIManager = (id) => {
+    const onDeleteAPIManager = (deleteConfirmationManager, id) => {
         //my goal with these was to decouple the api logic from the logic that edits the cards.
         //these theoretically return true only if the api call is successful
         //once successful, the class takes care of the rest
         return new Promise((resolve, reject) =>{
-            userConfirmModal.awaitUserChoice()
+            deleteConfirmationManager.awaitUserChoice()
             .then(choice => {
                 if (choice) {
                     dbApi.requestDelete(id)
-                        .then(resolve(true))
+                        .then(() => {
+                            deleteConfirmationManager.setToConfirm();
+                            deleteConfirmationManager.close();
+                            resolve(true);
+                        })
                         .catch((err) => {
+                            deleteConfirmationManager.setToConfirm();
                             console.error(`Card delete request failed ${err}`);
                             reject();
                         });
@@ -177,7 +185,7 @@ function makeNewCard({ name, link, isLiked, _id }) {
     }
  
     
-    newCard = new CardElement({name: name, link: link, isLiked: isLiked, id: _id, 
+    newCard = new CardElement({name: name, link: link, isLiked: isLiked, id: _id, deleteConfirmationManager: userConfirmDeleteModal,
         imageClickManager: imageClickManager,
         onDeleteAPIManager: onDeleteAPIManager,
         onLikeAPIManager: onLikeAPIManager,
