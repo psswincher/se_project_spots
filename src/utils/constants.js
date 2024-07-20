@@ -34,8 +34,8 @@ export const modalSelectors = {
   previewModalImage: ".modal__preview-image",
   previewModalTitle: "#preview-title",
   confirmModalSelector: "#confirm-modal",
-  modalConfirmButtonSelector: ".modal__button-confirm",
-  modalCancelButtonSelector: ".modal__button-cancel",
+  modalConfirmButtonSelector: ".modal__confirm-button",
+  modalCancelButtonSelector: ".modal__cancel-button",
   editAvatarSelector: "#edit-avatar-modal",
 }
 

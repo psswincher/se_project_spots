@@ -1,9 +1,18 @@
 import { cardSelectors } from "../utils/constants.js";
 import { cardSettings } from "../utils/constants.js";
 
+// {
+//     "isLiked": false,
+//     "_id": "64a55f2a91758c001af2a1bd",
+//     "name": "The card's name",
+//     "link": "https://example.com/image.png",
+//     "owner": "e20537ed11237f86bbb20ccb",
+//     "createdAt": "2023-07-05T12:16:42.240Z"
+// }
+
 export default class CardElement {
 
-    constructor({ name, link, isLiked, id, imageClickManager, onDeleteAPIManager, onLikeAPIManager, deleteConfirmationManager } ) {
+    constructor({ name, link, isLiked, id, imageClickManager, onDeleteAPIManager, onLikeAPIManager } ) {
         this.id = id;
         this._cardTemplate = document.querySelector(cardSelectors.template);
         this._cardElement = this._cardTemplate.content.querySelector(".card").cloneNode(true);
@@ -18,7 +27,7 @@ export default class CardElement {
         this._onDeleteAPIManager = onDeleteAPIManager;
 
         this._onLikeAPIManager = onLikeAPIManager;
-        this.deleteConfirmationManager = deleteConfirmationManager;        
+        
         this._imageClickManager = imageClickManager;
         this.setTitle(name);
         this.setCardImage(link);
@@ -93,7 +102,7 @@ export default class CardElement {
     }
 
     _onDeleteClick() {
-        this._onDeleteAPIManager(this.deleteConfirmationManager, this.id)
+        this._onDeleteAPIManager(this.id)
         .then(result => {if(result) this.remove();})
     }
 
