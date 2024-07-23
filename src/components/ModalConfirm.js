@@ -13,15 +13,14 @@ export default class ModalConfirm extends Modal {
     cancelText = "Cancel",
   } = {}) {
     super({ modalSelector });
-    console.log(this._modalElement);
     this._confirmText = confirmText;
     this._awaitingConfirmText = awaitingConfirmText;
     this._cancelText = cancelText;
     this._modalConfirmButton = this._modalElement.querySelector(
-      modalSelectors.modalConfirmButtonSelector,
+      modalSelectors.modalConfirmButtonSelector
     );
     this._modalCancelButton = this._modalElement.querySelector(
-      modalSelectors.modalCancelButtonSelector,
+      modalSelectors.modalCancelButtonSelector
     );
     this.awaitUserChoice = this.awaitUserChoice.bind(this);
 
@@ -37,8 +36,6 @@ export default class ModalConfirm extends Modal {
   _setCancelText(text) {
     this._modalCancelButton.textContent = text;
   }
-
-  _setEventListeners() {}
 
   _onCancelClick() {
     console.log("on cancel clicked");

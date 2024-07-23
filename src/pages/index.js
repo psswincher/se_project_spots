@@ -13,6 +13,7 @@ import FormValidator from "../scripts/validation.js";
 import Api from "../components/Api.js";
 import UserProfile from "../components/UserProfile.js";
 import ModalConfirm from "../components/ModalConfirm.js";
+import { v4 as uuidv4 } from "uuid";
 
 const dbApi = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
@@ -24,13 +25,12 @@ const dbApi = new Api({
 
 const cardSection = new Section({
   containerSelector: `.cards__list`,
-  renderer: (card) => {
-    const newCard = makeNewCard(card);
-    cardSection.addItem(newCard);
+  createItem: (data) => {
+    return makeNewCard(data);
   },
   initialize: (route) => {
     dbApi.getBatchData(route).then((data) => {
-      cardSection.setItems(data);
+      cardSection.createItems(data);
       cardSection.renderItems();
     });
   },
@@ -121,12 +121,8 @@ const newPostForm = new ModalWithForm({
           name: newPostTitle,
           link: newPostImageLink,
         })
-        .then(() => {
-          const newCard = makeNewCard({
-            name: newPostTitle,
-            link: newPostImageLink,
-          });
-          cardSection.addItem(newCard);
+        .then((data) => {
+          cardSection.createAndRenderItem(data);
           resolve();
         })
         .catch((err) => {
