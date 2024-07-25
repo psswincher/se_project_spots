@@ -1,24 +1,24 @@
 .cards__content {
-    padding: 20px 0 40px;
-    border-bottom: solid 1px rgba(33, 33, 33, 0.4);
+  padding: 20px 0 40px;
+  border-bottom: solid 1px rgba(33, 33, 33, 0.4);
 }
 
 .cards__list {
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(25.8rem, 1fr));
-    row-gap: 40px;
-    column-gap: 20px;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(25.8rem, 1fr));
+  row-gap: 40px;
+  column-gap: 20px;
 }
 
 @media screen and (max-width: 500px) {
-    .cards__list {
-        grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-        row-gap: 20px;
-    }
+  .cards__list {
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    row-gap: 20px;
+  }
 
-    .cards__content {
-        padding-bottom: 20px;
-    }
+  .cards__content {
+    padding-bottom: 20px;
+  }
 }
