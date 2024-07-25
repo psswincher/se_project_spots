@@ -82,6 +82,7 @@ const editAvatarForm = new ModalWithForm({
           userProfile.setUserImage(
             inputValues[userProfileSettings.profileInputAvatarLink]
           );
+          
         });
     }
     handleSubmit(makeRequest, editAvatarForm);
@@ -122,7 +123,6 @@ const newPostForm = new ModalWithForm({
           link: inputValues[cardSelectors.cardInputLink],
         })
         .then((res) => {
-          formValidators[newPostForm.formName].resetValidation();
           cardSection.createAndRenderItem(res);
         });
     }
@@ -229,5 +229,7 @@ function handleSubmit(request, modalInstance) {
   request()
     .then(() => modalInstance.close())
     .catch(console.error)
-    .finally(() => modalInstance.renderLoading(false));
+    .finally(() => {
+        formValidators[modalInstance.formName].resetValidation();
+        modalInstance.renderLoading(false)});
 }
