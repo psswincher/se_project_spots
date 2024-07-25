@@ -11,6 +11,7 @@ export default class ModalConfirm extends Modal {
     confirmText = "Confirm",
     awaitingConfirmText = "Confirming...",
     cancelText = "Cancel",
+    onConfirmCallback,
   } = {}) {
     super({ modalSelector });
     this._confirmText = confirmText;
@@ -22,10 +23,14 @@ export default class ModalConfirm extends Modal {
     this._modalCancelButton = this._modalElement.querySelector(
       modalSelectors.modalCancelButtonSelector
     );
-    this.awaitUserChoice = this.awaitUserChoice.bind(this);
-
+    this.clickHandler = this.clickHandler.bind(this);
+    this.onConfirmCallback = onConfirmCallback;
+    
     this._setConfirmText(this._confirmText);
     this._setCancelText(this._cancelText);
+
+    
+    this._modalElement.addEventListener("click", this.clickHandler);
   }
 
   _setConfirmText(text) {
@@ -65,22 +70,17 @@ export default class ModalConfirm extends Modal {
     this._modalConfirmButton.textContent = this._confirmText;
   }
 
-  awaitUserChoice() {
-    this.open();
-    const modal = this;
-    return new Promise((resolve) => {
-      modal._modalElement.addEventListener("click", function clickHandler(evt) {
-        if (evt.target.classList.contains("modal__button-confirm")) {
-          modal._setToConfirming();
-          modal._modalElement.removeEventListener("click", clickHandler);
-          resolve(true);
-        }
-        if (evt.target.classList.contains("modal__button-cancel")) {
-          modal._modalElement.removeEventListener("click", clickHandler);
-          modal.close();
-          resolve(false);
-        }
-      });
-    });
+  close() {
+    super.close();     
   }
-}
+
+  clickHandler(evt) {
+      evt.target.classList.contains("modal__button-confirm") ? this.onConfirmCallback(this.callbackData) : this.close();
+  }
+
+  awaitUserChoice(callbackData) {
+    this.open();
+    this.callbackData = callbackData;
+    }
+  }
+

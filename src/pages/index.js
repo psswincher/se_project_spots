@@ -31,6 +31,14 @@ const userConfirmDeleteModal = new ModalConfirm({
   modalSelector: modalSelectors.confirmModalSelector,
   confirmText: "Delete",
   awaitingConfirmText: "Deleting...",
+  onConfirmCallback: (callbackData) => {
+    function makeRequest() {
+      return dbApi.requestDelete(callbackData.id).then(() => {
+          callbackData.cardElement.remove();
+        });
+      }
+      handleSubmit(makeRequest, userConfirmDeleteModal)
+  }
 });
 
 const cardSection = new Section({
@@ -177,19 +185,8 @@ function makeNewCard({ name, link, isLiked, _id }) {
     previewImageModal.open();
   };
 
-  const onDeleteAPIManager = (deleteConfirmationManager, id) => {
-    function makeRequest() {
-      return deleteConfirmationManager.awaitUserChoice().then((choice) => {
-        if (choice) {
-          dbApi.requestDelete(id).then(() => {
-            deleteConfirmationManager.close();
-            newCard.remove();
-          });
-        }
-      });
-    }
-
-    handleSubmit(makeRequest, deleteConfirmationManager);
+  const onDeleteAPIManager = (deleteConfirmationManager, id) => {  
+      deleteConfirmationManager.awaitUserChoice({id:id, cardElement: newCard})
   };
 
   const onLikeAPIManager = (id, bool) => {
@@ -227,9 +224,10 @@ function enableValidation(config) {
 function handleSubmit(request, modalInstance) {
   modalInstance.renderLoading(true);
   request()
-    .then(() => modalInstance.close())
+    .then(() =>  {
+      modalInstance.close()
+      if(formValidators[modalInstance.formName]) formValidators[modalInstance.formName].resetValidation();  
+    })
     .catch(console.error)
-    .finally(() => {
-        formValidators[modalInstance.formName].resetValidation();
-        modalInstance.renderLoading(false)});
+    .finally(() => modalInstance.renderLoading(false));
 }
