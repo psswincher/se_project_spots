@@ -1,20 +1,33 @@
 import Modal from "./Modal.js";
+import { modalSelectors } from "../utils/constants.js";
 
 export default class ModalWithForm extends Modal {
-  constructor({ modalSelector, onSubmitCallback }) {
+  constructor({
+    modalSelector,
+    onSubmitCallback,
+    submitText = "Submit",
+    loadingSubmitText = "Submitting",
+  } = {}) {
     super({ modalSelector });
 
+    this._form = this._modalElement.querySelector(modalSelectors.formSelector);
+    this.formName = this._form.getAttribute("name");
     //note: onSubmitCallback must always return a promise.
     this._onSubmitCallback = onSubmitCallback;
     this._submitButton = this._modalElement.querySelector(
-      ".modal__submit-button"
+      modalSelectors.submitButtonSelector
     );
-    this._inputFields = this._modalElement.querySelectorAll(".modal__input");
-    this._form = this._modalElement.querySelector(".modal__form");
-    this._currentProfileName = document.querySelector(".profile__name");
-    this._currentProfileDescription = document.querySelector(
-      ".profile__description"
+    this._inputFields = this._modalElement.querySelectorAll(
+      modalSelectors.inputSelector
     );
+    this._submitText = submitText;
+    this._loadingSubmitText = loadingSubmitText;
+    this.renderLoading(false);
+  }
+
+  close() {
+    super.close();
+    this._resetInputs();
   }
 
   getFormElement() {
@@ -22,9 +35,7 @@ export default class ModalWithForm extends Modal {
   }
 
   _resetInputs() {
-    this._inputFields.forEach((field) => {
-      field.value = "";
-    });
+    this._form.reset();
   }
 
   _setEventListeners() {
@@ -43,24 +54,13 @@ export default class ModalWithForm extends Modal {
 
   _onSubmit(evt) {
     evt.preventDefault();
-    this._setSubmitToSubmitting();
-    this._onSubmitCallback(this._getInputValues())
-      .then(() => {
-        this._resetInputs();
-        this._setSubmitToSubmit();
-        this.close();
-      })
-      .catch(() => {
-        this._setSubmitToSubmit();
-      });
+    this._onSubmitCallback(this._getInputValues());
   }
 
-  _setSubmitToSubmitting() {
-    this._submitButton.textContent = "Submitting...";
-  }
-
-  _setSubmitToSubmit() {
-    this._submitButton.textContent = "Submit";
+  renderLoading(isLoading) {
+    this._submitButton.textContent = isLoading
+      ? this._loadingSubmitText
+      : this._submitText;
   }
 
   setDefaultInputs(defaultsObject) {

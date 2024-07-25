@@ -55,7 +55,7 @@ export default class FormValidator {
 
   _setFormInputElements() {
     this._formInputElements = Array.from(
-      this._formElement.querySelectorAll(this._settings.inputSelector),
+      this._formElement.querySelectorAll(this._settings.inputSelector)
     );
   }
 
@@ -67,7 +67,7 @@ export default class FormValidator {
 
   _setFormButtons() {
     this._buttonElement = this._formElement.querySelector(
-      this._settings.submitButtonSelector,
+      this._settings.submitButtonSelector
     );
   }
 

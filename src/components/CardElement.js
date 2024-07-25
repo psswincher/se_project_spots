@@ -19,20 +19,20 @@ export default class CardElement {
       .cloneNode(true);
     this._cardImage = this._cardElement.querySelector(cardSelectors.image);
     this._likeButton = this._cardElement.querySelector(
-      cardSelectors.likeButton,
+      cardSelectors.likeButton
     );
     this._deleteButton = this._cardElement.querySelector(
-      cardSelectors.deleteButton,
+      cardSelectors.deleteButton
     );
     this._titleElement = this._cardElement.querySelector(
-      cardSelectors.cardTitle,
+      cardSelectors.cardTitle
     );
 
     this._cardUnlikedImage = this._cardElement.querySelector(
-      cardSelectors.unlikedImage,
+      cardSelectors.unlikedImage
     );
     this._cardLikedImage = this._cardElement.querySelector(
-      cardSelectors.likedImage,
+      cardSelectors.likedImage
     );
 
     this._onDeleteAPIManager = onDeleteAPIManager;
@@ -82,22 +82,28 @@ export default class CardElement {
   }
 
   onLikeClick() {
-    if (this.isLikeActive()) {
-      this._onLikeAPIManager(this.id, false).then((result) => {
+    this.isLikeActive() ? this.executeLikeClick() : this.executeUnlikeClick();
+  }
+
+  executeLikeClick() {
+    this._onLikeAPIManager(this.id, false)
+      .then((result) => {
         if (result) this.deactivateLikeButton();
-      });
-    } else {
-      this._onLikeAPIManager(this.id, true).then((result) => {
+      })
+      .catch((err) => console.error(`Error liking post: ${err}`));
+  }
+
+  executeUnlikeClick() {
+    this._onLikeAPIManager(this.id, true)
+      .then((result) => {
         if (result) this.activateLikeButton();
-      });
-    }
+      })
+      .catch((err) => console.log(`Error unliking post: ${err}`));
   }
 
   isLikeActive() {
-    //this logic implemented before API was implemented.
-    //should the server be the authority? or the browser?
     return !this._cardLikedImage.classList.contains(
-      "card__liked-image__inactive",
+      "card__liked-image__inactive"
     );
   }
 
@@ -116,11 +122,7 @@ export default class CardElement {
   }
 
   _onDeleteClick() {
-    this._onDeleteAPIManager(this.deleteConfirmationManager, this.id).then(
-      (result) => {
-        if (result) this.remove();
-      },
-    );
+    this._onDeleteAPIManager(this.deleteConfirmationManager, this.id);
   }
 
   onImageClick() {

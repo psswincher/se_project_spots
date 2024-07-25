@@ -29,7 +29,6 @@ export default class ModalConfirm extends Modal {
   }
 
   _setConfirmText(text) {
-    console.log(this._modalCinformButton);
     this._modalConfirmButton.textContent = text;
   }
 
@@ -37,18 +36,25 @@ export default class ModalConfirm extends Modal {
     this._modalCancelButton.textContent = text;
   }
 
+  open() {
+    super.open();
+    this.setToConfirm();
+  }
+
   _onCancelClick() {
-    console.log("on cancel clicked");
     this._modalElement.removeEventListener("click", this.handler);
     this.close();
     return false;
   }
 
   _onConfirmClick() {
-    console.log("on confirm clicked");
     this._modalElement.removeEventListener("click", this.handler);
     this.close();
     return true;
+  }
+
+  renderLoading(isLoading) {
+    isLoading ? this._setToConfirming() : this.setToConfirm();
   }
 
   _setToConfirming() {

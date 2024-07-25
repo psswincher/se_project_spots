@@ -6,7 +6,7 @@ export default class Modal {
     this._modalElement = document.querySelector(modalSelector);
     this._handleEscapeClose = this._handleEscapeClose.bind(this);
     this._closeButton = this._modalElement.querySelector(
-      modalSelectors.modalCloseButton,
+      modalSelectors.modalCloseButton
     );
 
     this._setEventListeners();
@@ -37,7 +37,7 @@ export default class Modal {
   _setEventListeners() {
     this._closeButton.addEventListener("click", () => this.close());
     this._modalElement.addEventListener("click", (evt) =>
-      this._handleModalOverlayClick(evt),
+      this._handleModalOverlayClick(evt)
     );
   }
 

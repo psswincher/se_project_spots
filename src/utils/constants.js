@@ -18,6 +18,8 @@ export const cardSelectors = {
   cardTitle: ".card__title",
   unlikedImage: ".card__unliked-image",
   likedImage: ".card__liked-image",
+  cardInputCaption: "post-caption",
+  cardInputLink: "post-image-link",
 };
 
 export const cardSettings = {
@@ -37,6 +39,9 @@ export const modalSelectors = {
   modalConfirmButtonSelector: ".modal__button-confirm",
   modalCancelButtonSelector: ".modal__button-cancel",
   editAvatarSelector: "#edit-avatar-modal",
+  submitButtonSelector: ".modal__submit-button",
+  inputSelector: ".modal__input",
+  formSelector: ".modal__form",
 };
 
 export const newPostModalPlaceholders = {
@@ -52,6 +57,9 @@ export const userProfileSettings = {
   profileNameSelector: ".profile__name",
   profileDescriptionSelector: ".profile__description",
   profileAvatarSelector: ".profile__avatar",
+  profileInputName: "profile-name",
+  profileInputDesc: "profile-description",
+  profileInputAvatarLink: "avatar-link",
 };
 
 export const routeData = {

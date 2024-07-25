@@ -3,6 +3,8 @@ import {
   modalSelectors,
   newPostModalPlaceholders,
   routeData,
+  cardSelectors,
+  userProfileSettings,
 } from "../utils/constants.js";
 import CardElement from "../components/CardElement.js";
 import "./index.css";
@@ -13,7 +15,6 @@ import FormValidator from "../scripts/validation.js";
 import Api from "../components/Api.js";
 import UserProfile from "../components/UserProfile.js";
 import ModalConfirm from "../components/ModalConfirm.js";
-import { v4 as uuidv4 } from "uuid";
 
 const dbApi = new Api({
   baseUrl: "https://around-api.en.tripleten-services.com/v1",
@@ -23,16 +24,28 @@ const dbApi = new Api({
   },
 });
 
+const formValidators = {};
+enableValidation(validationSettings);
+
+const userConfirmDeleteModal = new ModalConfirm({
+  modalSelector: modalSelectors.confirmModalSelector,
+  confirmText: "Delete",
+  awaitingConfirmText: "Deleting...",
+});
+
 const cardSection = new Section({
   containerSelector: `.cards__list`,
   createItem: (data) => {
     return makeNewCard(data);
   },
   initialize: (route) => {
-    dbApi.getBatchData(route).then((data) => {
-      cardSection.createItems(data);
-      cardSection.renderItems();
-    });
+    dbApi
+      .getBatchData(route)
+      .then((data) => {
+        cardSection.createItems(data);
+        cardSection.renderItems();
+      })
+      .catch((err) => console.error(`Error initializing card section: ${err}`));
   },
 });
 
@@ -48,7 +61,6 @@ const userProfile = new UserProfile({
           profileDescription: data.about,
           imageUrl: data.avatar,
         });
-        editProfileForm.setDefaultInputs(userProfile.getUserProfile());
       })
       .catch((err) => {
         console.error(`Failed to get user data: ${err}`);
@@ -61,89 +73,65 @@ userProfile.initialize();
 const editAvatarForm = new ModalWithForm({
   modalSelector: modalSelectors.editAvatarSelector,
   onSubmitCallback: (inputValues) => {
-    return new Promise((resolve, reject) => {
-      dbApi
+    function makeRequest() {
+      return dbApi
         .request(routeData.updateUserAvatar, {
-          avatar: inputValues["avatar-link"],
+          avatar: inputValues[userProfileSettings.profileInputAvatarLink],
         })
         .then(() => {
-          userProfile.setUserImage(inputValues["avatar-link"]);
-          resolve();
-        })
-        .catch(() => reject());
-    });
+          userProfile.setUserImage(
+            inputValues[userProfileSettings.profileInputAvatarLink]
+          );
+        });
+    }
+    handleSubmit(makeRequest, editAvatarForm);
   },
 });
-
-const editAvatarFormValidator = new FormValidator(
-  validationSettings,
-  editAvatarForm.getFormElement()
-);
-editAvatarFormValidator.enableValidation();
 
 const editProfileForm = new ModalWithForm({
   modalSelector: modalSelectors.editProfileModal,
   onSubmitCallback: (inputValues) => {
-    return new Promise((resolve, reject) => {
-      dbApi
+    function makeRequest() {
+      return dbApi
         .request(routeData.updateUserProfile, {
-          name: inputValues["profile-name"],
-          about: inputValues["profile-description"],
+          name: inputValues[userProfileSettings.profileInputName],
+          about: inputValues[userProfileSettings.profileInputDesc],
         })
         .then(() => {
-          userProfile.setUserName(inputValues["profile-name"]);
-          userProfile.setUserDescription(inputValues["profile-description"]);
+          userProfile.setUserName(
+            inputValues[userProfileSettings.profileInputName]
+          );
+          userProfile.setUserDescription(
+            inputValues[userProfileSettings.profileInputDesc]
+          );
           editProfileForm.setDefaultInputs(userProfile.getUserProfile());
-          resolve();
-        })
-        .catch((err) => {
-          console.error(`Failed to edit profile: ${err}`);
-          reject();
         });
-    });
+    }
+
+    handleSubmit(makeRequest, editProfileForm);
   },
 });
 
-const editProfileFormValidator = new FormValidator(
-  validationSettings,
-  editProfileForm.getFormElement()
-);
-editProfileFormValidator.enableValidation();
-
 const newPostForm = new ModalWithForm({
-  modalSelector: "#post-modal",
+  modalSelector: modalSelectors.newPostModal,
   onSubmitCallback: (inputValues) => {
-    return new Promise((resolve, reject) => {
-      const newPostTitle = inputValues["post-caption"];
-      const newPostImageLink = inputValues["post-image-link"];
-      dbApi
+    function makeRequest() {
+      return dbApi
         .request(routeData.createCard, {
-          name: newPostTitle,
-          link: newPostImageLink,
+          name: inputValues[cardSelectors.cardInputCaption],
+          link: inputValues[cardSelectors.cardInputLink],
         })
-        .then((data) => {
-          cardSection.createAndRenderItem(data);
-          resolve();
-        })
-        .catch((err) => {
-          console.error(`Failed to create new post: ${err}`);
-          reject();
+        .then((res) => {
+          formValidators[newPostForm.formName].resetValidation();
+          cardSection.createAndRenderItem(res);
         });
-    });
+    }
+
+    handleSubmit(makeRequest, newPostForm);
   },
 });
 
 newPostForm.setPlaceholderInputs(newPostModalPlaceholders);
-
-const newPostFormValidator = new FormValidator(
-  validationSettings,
-  newPostForm.getFormElement()
-);
-newPostFormValidator.enableValidation();
-
-const previewImageModal = new ModalPreviewImage({
-  modalSelector: "#preview-modal",
-});
 
 setPageListeners();
 
@@ -165,16 +153,16 @@ function onEditAvatarClick() {
 }
 
 function onEditProfileClick() {
+  editProfileForm.setDefaultInputs(userProfile.getUserProfile());
   editProfileForm.open();
 }
 
 function onNewPostClick() {
   newPostForm.open();
 }
-const userConfirmDeleteModal = new ModalConfirm({
-  modalSelector: modalSelectors.confirmModalSelector,
-  confirmText: "Delete",
-  awaitingConfirmText: "Deleting...",
+
+const previewImageModal = new ModalPreviewImage({
+  modalSelector: "#preview-modal",
 });
 
 function makeNewCard({ name, link, isLiked, _id }) {
@@ -190,40 +178,25 @@ function makeNewCard({ name, link, isLiked, _id }) {
   };
 
   const onDeleteAPIManager = (deleteConfirmationManager, id) => {
-    //my goal with these was to decouple the api logic from the logic that edits the cards.
-    //these theoretically return true only if the api call is successful
-    //once successful, the class takes care of the rest
-    return new Promise((resolve, reject) => {
-      deleteConfirmationManager.awaitUserChoice().then((choice) => {
+    function makeRequest() {
+      return deleteConfirmationManager.awaitUserChoice().then((choice) => {
         if (choice) {
-          dbApi
-            .requestDelete(id)
-            .then(() => {
-              deleteConfirmationManager.setToConfirm();
-              deleteConfirmationManager.close();
-              resolve(true);
-            })
-            .catch((err) => {
-              deleteConfirmationManager.setToConfirm();
-              console.error(`Card delete request failed ${err}`);
-              reject();
-            });
+          dbApi.requestDelete(id).then(() => {
+            deleteConfirmationManager.close();
+            newCard.remove();
+          });
         }
       });
-    });
+    }
+
+    handleSubmit(makeRequest, deleteConfirmationManager);
   };
 
   const onLikeAPIManager = (id, bool) => {
-    return new Promise((resolve, reject) => {
-      dbApi
-        .requestLikeUpdate(id, bool)
-        .then((res) => {
-          resolve(true);
-        })
-        .catch((err) => {
-          console.error(`Card like request failed ${err}`);
-          reject();
-        });
+    return new Promise((resolve) => {
+      dbApi.requestLikeUpdate(id, bool).then(() => {
+        resolve(true);
+      });
     });
   };
 
@@ -239,4 +212,22 @@ function makeNewCard({ name, link, isLiked, _id }) {
   });
 
   return newCard.getView();
+}
+
+function enableValidation(config) {
+  const formList = Array.from(document.querySelectorAll(config.formSelector));
+  formList.forEach((form) => {
+    const validator = new FormValidator(config, form);
+    const formName = form.getAttribute("name");
+    formValidators[formName] = validator;
+    validator.enableValidation();
+  });
+}
+
+function handleSubmit(request, modalInstance) {
+  modalInstance.renderLoading(true);
+  request()
+    .then(() => modalInstance.close())
+    .catch(console.error)
+    .finally(() => modalInstance.renderLoading(false));
 }
