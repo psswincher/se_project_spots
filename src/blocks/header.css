@@ -1,20 +1,20 @@
 .header {
-    margin: 0 0 34px 0;
-    min-height: 46px;   
-    padding: 10px 0 10px;
-    background-color: #FFFFFFCC;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  margin: 0 0 34px 0;
+  min-height: 46px;
+  padding: 10px 0 10px;
+  background-color: #ffffffcc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .header__logo {
-    height: 26px;
-    width: 94px;
+  height: 26px;
+  width: 94px;
 }
 
 @media screen and (max-width: 840px) {
-    .header {
-        margin: 0 0 20px 0;
-    };
+  .header {
+    margin: 0 0 20px 0;
+  }
 }
